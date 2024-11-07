@@ -1,5 +1,7 @@
 # LPHYS1303 - Simulation numérique pour la physique
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
+
 ## Project Finite Differences: __The double pendulum__
 
 The model of the double pendulum consists of 
