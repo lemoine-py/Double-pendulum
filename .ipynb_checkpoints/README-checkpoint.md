@@ -1,9 +1,6 @@
 # LPHYS1303 - Simulation numérique pour la physique
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
-> Caution : Binder can take some time (3 min <) to open.
-
-## Project Finite Differences: __The double pendulum__
+## Projet FD: Le double pendule 
 
 The model of the double pendulum consists of 
 two points objects with mass m, linked by two 
@@ -58,18 +55,14 @@ the convergence for large .
 5) Using the sign of as an indicator, identify the energy threshold at which the 
 system become chaotic.
 The largest Lyapunov exponent can be computed following this procedure
-
 ### SPIN-UP
-
 This step is necessary to identify the direction of maximum growth. 
 - choose an arbitrary initial condition with small amplitude
 - integrate the tangent linear evolution for a certain time (to be identified experimentally) 
 until the direction of is stable
 - renormalize in order to define a new that points in the unstable direction but is 
 small in amplitude
-
-### COMPUTATION OF THE LYAPUNOV EXPONENT
-
+COMPUTATION OF THE LYAPUNOV EXPONENT
 - choose an initial condition based on the results of the SPIN-UP phase
 - integrate the tangent linear evolution for a time t sufficiently long that converges 
 - along the evolution, it will be necessary to regularly renormalise the distance in order to 
