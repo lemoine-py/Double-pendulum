@@ -104,7 +104,7 @@ plt.tight_layout()
 plt.show()
 
 #plt.plot(t, u[:,3])
-plt.plot(th1, th2)  # brownian mouvement
+plt.plot(th1, th2)  # brownian motion
 plt.show()
 plt.plot(t1, E) 
 plt.show()
