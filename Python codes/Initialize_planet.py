@@ -1,5 +1,31 @@
-import numpy as np
-import scipy as sp
+
+""" Module that initializes all the parameters of the double pendulum model """
+
+def Initialize(planet):
+    print("")
+    print(" ___ DOUBLE PENDULUM SIMULATION ___ ")
+    print("")
+    print(" --- Initialization of the model ----")
+    print("")
+    g = planet()
+    print("")
+    l1 = float(input(" - Length l1 of the upper rod (m): ... "))
+    print("")
+    l2 = float(input(" - Length l2 of the lower rod (m): ... "))
+    print("")
+    m1 = float(input(" - Mass m1 of the upper rod (kg): ... "))
+    print("")
+    m2 = float(input(" - Mass m2 of the lower rod (kg): ... "))
+    print("")
+    theta1 = float(input(" - Initial angle theta_1 of the upper rod (degrees): ... "))
+    print("")
+    theta2 = float(input(" - Initial angle theta_2 of the lower rod (degrees): ... "))
+    print("")
+    omega1 = float(input(" - Initial angular velocity omega_1 of the upper rod (m/s): ... "))
+    print("")
+    omega2 = float(input(" - Initial angular velocity omega_2 of the lower rod (m/s): ... "))
+    print("")
+    return g, l1, l2, m1, m2, theta1, theta2, omega1, omega2
 
 def planet():
     """ Sets the planet (and thus the gravitational acceleration g) where the pendulum is located """
@@ -47,26 +73,6 @@ def planet():
         g = 0
     return g
 
-def Initialize(planet):
-    print("")
-    print(" ___ DOUBLE PENDULUM SIMULATION ___ ")
-    print("")
-    print(" --- Initialization of the model ----")
-    print("")
-    g = planet()
-    print("")
-    l = float(input(" - Length l of the two rods (m): ... "))
-    print("")
-    m = float(input(" - Mass m of the two rods (kg): ... "))
-    print("")
-    theta1 = float(input(" - Initial angle theta_1 of the top rod (degrees): ... "))
-    print("")
-    theta2 = float(input(" - Initial angle theta_2 of the bottom rod (degrees): ... "))
-    print("")
-    omega1 = float(input(" - Initial angular velocity omega_1 of the top rod (m/s): ... "))
-    print("")
-    omega2 = float(input(" - Initial angular velocity omega_2 of the bottom rod (m/s): ... "))
-    print("")
-    return g, l, m, theta1, theta2, omega1, omega2
-
-g, l, m, theta1, theta2, omega1, omega2 = Initialize(planet)
+def __main__():
+    # Call the initialization function to fix the parameters
+    g, l1, l2, m1, m2, th1_0, th2_0, w1_0, w2_0 = Initialize(planet)

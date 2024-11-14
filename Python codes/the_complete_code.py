@@ -4,7 +4,6 @@ By "complete", we mean that this code is self-sufficient and can be run as is.
 
 For clarity, the repository is divided into several modules, that are copy-pasted here.
 
-P.S. This code is actually dedicated to a certain collaborator, who will recognize himself.
 """
 # Libraries
 import numpy as np
@@ -147,3 +146,4 @@ ax[1, 1].plot(t, u[:,3])
 ax[1, 1].set_xlabel("Time (s)")
 
 plt.tight_layout()
+plt.show()
