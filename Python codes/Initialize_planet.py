@@ -69,4 +69,4 @@ def Initialize(planet):
     print("")
     return g, l, m, theta1, theta2, omega1, omega2
 
-g,l,m, theta1, theta2, omega1, omega2 = Initialize(planet)
+g, l, m, theta1, theta2, omega1, omega2 = Initialize(planet)
