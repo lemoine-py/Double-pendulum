@@ -2,17 +2,13 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
 > Caution : Binder can take some time (3 min <) to open.
+> Caution2 : Basic libraries are not recognised by Jupyter, resulting in the code unable to be executed.
+
+The following text is purely temporary.
 
 ## Project Finite Differences: __The double pendulum__
 
-The model of the double pendulum consists of 
-two points objects with mass m, linked by two 
-arms of fixed length l, subject to the gravity force 
-in the vertical. The position of the two objects is 
-completely defined by the angles and . 
-This system has the characteristic of developing 
-chaotic trajectories above a certain threshold 
-in the energy of the initial condition.
+The model of the double pendulum consists of two points objects with mass m, linked by two arms of fixed length l, subject to the gravity force in the vertical. The position of the two objects is completely defined by the angles and . This system has the characteristic of developing chaotic trajectories above a certain threshold in the energy of the initial condition.
 
 ### CHAOS AND LYAPUNOV EXPONENTS
 The Lyapunov exponent is a mathematical concept that characterise the chaotic 
