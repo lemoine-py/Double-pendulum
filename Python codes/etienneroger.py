@@ -31,7 +31,7 @@ def big_F(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
 
-def F_MIT(w1, w2, th1, th2): # MIT version on the derivative
+def F_MIT(w1, w2, th1, th2): # MIT version of the derivative
     num1 = -g*(2*m1+m2)*np.sin(th1)-m2*g*np.sin(th1-2*th2)-2*np.sin(th1-th2)*m2*(w2**2*l2+w1**2*l1*np.cos(th1-th2))
     denom1 = l1*(2*m1+m2-m2*np.cos(2*th1-2*th2))
     
@@ -73,7 +73,7 @@ V = np.zeros(N)
 E = np.zeros(N)
 
 for i in range(N):
-    T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # cinetic energy
+    T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
     V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
     E[i] = T[i] + V[i] # total energy
 
