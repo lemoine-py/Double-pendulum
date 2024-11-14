@@ -55,16 +55,24 @@ t, u = solve_RK4(big_F, u0, h, t_max)
 fig, ax = plt.subplots(2, 2)
 
 ax[0, 0].plot(t, u[:,0])
+ax[0, 0].set_xlabel("Time (s)")
 ax[0, 0].set_title("w1")
+ax[0, 0].grid()
     
 ax[0, 1].plot(t, u[:,1])
+ax[0, 1].set_xlabel("Time (s)")
 ax[0, 1].set_title("w2")
+ax[0, 1].grid()
     
 ax[1, 0].plot(t, u[:,2])
-ax[1, 0].set_title("th1")
+ax[1, 0].set_xlabel("Time (s)")
+ax[1, 0].set_title("theta1")
+ax[1, 0].grid()
     
 ax[1, 1].plot(t, u[:,3])
-ax[1, 1].set_title("th2")
+ax[1, 1].set_xlabel("Time (s)")
+ax[1, 1].set_title("theta2")
+ax[1, 1].grid()
 
 plt.tight_layout()
 plt.show()
