@@ -20,6 +20,9 @@ th2_0 = np.pi
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
 def big_F(w1, w2, th1, th2):
+    """ Derivatives of the u array """
+    
+    # Separating the numerator and the denominator of the equations for clarity
     num1 = -1*m2*(l1*w1**2*np.sin(th1-th2)-g*np.sin(th1-th2))*np.cos(th1-th2)-m2*l2*w2**2*np.sin(th1-th2)-(m1+m2)*g*np.sin(th1)
     denom1 = ((m1+m2)*l1-l1*np.cos(th1-th2)**2*m2)
     
@@ -126,6 +129,8 @@ for i in range(N):
 
 plt.plot(x1, y1)
 plt.plot(x2, y2)
+
+plt.show()
 
 
 
