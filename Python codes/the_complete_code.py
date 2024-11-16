@@ -150,6 +150,8 @@ w2 = u1[:,1]
 
 ### Energy calculation
 
+N = int(np.floor(t_max / h)) + 1 # Was previousl not a global variable !
+
 T = np.zeros(N)
 V = np.zeros(N)
 E = np.zeros(N)
