@@ -8,7 +8,7 @@ m2 = 1
 g = 9.81
 
 t_max = 20
-h = 0.01
+h = 0.02 # Not smaller than that for the gif
 N = int(np.floor(t_max/h))+1
 
 w1_0 = 0
@@ -131,6 +131,19 @@ plt.plot(x1, y1)
 plt.plot(x2, y2)
 
 plt.show()
+
+def animate(i):
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
+    
+fig, ax = plt.subplots(1,1, figsize=(4*(l1+l2),4*(l1+l2)))
+ax.set_facecolor('k')
+ax.get_xaxis().set_ticks([])    # enable this to hide x axis ticks
+ax.get_yaxis().set_ticks([])    # enable this to hide y axis ticks
+ln1, = plt.plot([], [], 'ro--', lw=3, markersize=8)
+ax.set_ylim(-2*(l1+l2),2*(l1+l2))
+ax.set_xlim(-2*(l1+l2),2*(l1+l2))
+ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50)
+ani.save('pen.gif',writer='pillow',fps=1/h)
 
 
 
