@@ -12,8 +12,7 @@ The model of the double pendulum consists of two points objects with mass m, lin
 
 ### CHAOS AND LYAPUNOV EXPONENTS
 
-The Lyapunov exponent is a mathematical concept that characterise the chaotic 
-behaviour of a dynamical system. Let’s say that we have a system
+The Lyapunov exponent is a mathematical concept that characterise the chaotic behaviour of a dynamical system. Let’s say that we have a system
 
 $$
 \frac{d \mathbf{x}}{d t}=\mathbf{F}(\mathbf{x}, t)
@@ -33,11 +32,8 @@ $$
 
 ### PROJECT DESCRIPTION
 
-1) Develop the mathematical model for the double pendulum (you should have seen it in 
-some of your previous courses, otherwise it’s easy to find on textbooks online, or to 
-develop yourself).
-2) Implement a numerical scheme with good properties for this type of system. Explain 
-what motivated your choice.
+1) Develop the mathematical model for the double pendulum (you should have seen it in some of your previous courses, otherwise it’s easy to find on textbooks online, or to develop yourself).
+2) Implement a numerical scheme with good properties for this type of system. Explain what motivated your choice.
 3) Visualize different trajectories highlighting their possible chaotic behaviour in a qualitative way. Consider the best way to portray the information (e.g. plots against videos, etc..).
 4) Compute $\lambda_{\text {max }}$ for different choices of the energy of the system, showing in all cases the convergence for large $t$.
 5) Using the sign of $\lambda_{\max }$ as an indicator, identify the energy threshold at which the system become chaotic.
