@@ -6,7 +6,7 @@
 
 This README file is temporary.
 
-### Description of the problem
+## Description of the problem
 
 The model of the double pendulum consists of two points objects with mass $m$, linked by two arms of fixed length $l$, subject to the gravity force in the vertical. The position of the two objects is completely defined by the angles $\theta_1$ and $\theta_2$ . This system has the characteristic of developing chaotic trajectories above a certain threshold in the energy of the initial condition.
 
