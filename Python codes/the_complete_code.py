@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp # not used
 
+import matplotlib.animation as animation
+
 
 # INITIALIZATION of the project and the parameters
 
@@ -89,8 +91,8 @@ def planet():
 g, l1, l2, m1, m2, th1_0, th2_0, w1_0, w2_0 = Initialize(planet)
 
 # Time parameters
-t_max = 50
-h = 0.01 # Timestep size matters !!
+t_max = 20
+h = 0.02 # Timestep size matters !!
 
 # Initial conditions
 th1_0 = np.pi + 0.1
@@ -150,7 +152,8 @@ w2 = u1[:,1]
 
 ### Energy calculation
 
-N = int(np.floor(t_max / h)) + 1 # Was previousl not a global variable !
+N = int(np.floor(t_max / h)) + 1 
+# Defined here as a global variable but also defined in the function solve_RK4. -> redundant
 
 T = np.zeros(N)
 V = np.zeros(N)
@@ -185,13 +188,25 @@ ax[1, 1].set_title("theta2")
 ax[1, 1].grid()
 
 plt.tight_layout()
-plt.show()
+plt.savefig("angles_and_velocities.png")
 
 #plt.plot(t, u[:,3])
-plt.plot(th1, th2)  # brownian motion
-plt.show()
-plt.plot(t1, E) 
-plt.show()
+
+plt.figure()
+plt.plot(th1, th2)  # brownian motion (theta1 vs theta2)
+plt.suptitle("Brownian motion of the double pendulum")
+plt.xlabel("Theta 1")
+plt.ylabel("Theta 2")
+plt.grid()
+plt.savefig("brownian_motion.png")
+
+plt.figure()
+plt.plot(t1, E) # total energy vs time
+plt.suptitle("Total energy of the double pendulum")
+plt.xlabel("Time (s)")
+plt.ylabel("Total energy (J)")
+plt.grid()
+plt.savefig("total_energy.png")
 
 ### Position in cartesian coordinates
 
@@ -208,7 +223,26 @@ for i in range(N):
     x2[i] = x1[i] + l2*np.sin(th2[i])
     y2[i] = y1[i] - l2*np.cos(th2[i])
 
-plt.plot(x1, y1)
-plt.plot(x2, y2)
+plt.figure()
+plt.plot(x1, y1, label="m1")
+plt.plot(x2, y2, label="m2")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Position of the masses")
+plt.legend()
+plt.savefig("XY_position.png")
 
 plt.show()
+
+def animate(i):
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
+    
+fig, ax = plt.subplots(1,1, figsize=(4*(l1+l2),4*(l1+l2)))
+ax.set_facecolor('k')
+ax.get_xaxis().set_ticks([])    # enable this to hide x axis ticks
+ax.get_yaxis().set_ticks([])    # enable this to hide y axis ticks
+ln1, = plt.plot([], [], 'ro--', lw=3, markersize=8)
+ax.set_ylim(-2*(l1+l2),2*(l1+l2))
+ax.set_xlim(-2*(l1+l2),2*(l1+l2))
+ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50)
+ani.save('pen.gif',writer='pillow',fps=1/h)
