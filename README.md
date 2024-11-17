@@ -17,11 +17,13 @@ The Lyapunov exponent is a mathematical concept that characterizes the chaotic b
 $$ \frac{d \mathbf{x}}{d t}=\mathbf{F}(\mathbf{x}, t) $$
 
 We consider two trajectories separated by a distance $\delta \mathbf{x}(t)$, with $\delta \mathbf{x}(0)$ very small. The time evolution of the distance is given by the linear tangent operator $\mathbf{J}(x, t)$
+
 $$ \frac{d \delta \mathbf{x}}{d t}=\mathbf{J}(\mathbf{x}, t) \delta \mathbf{x} $$
 
 The rates of growth of the distance in different directions of the phase space define the spectrum of Lyapunov exponents.
 
 A dynamical system shows chaos if at least one of its Lyapunov exponents is positive. The analysis of the full spectrum goes beyond the scope of this project, but the largest Lyapunov exponent can be computed as
+
 $$ \lambda_{\max }=\lim _{t \rightarrow+\infty} \frac{1}{t} \ln \left(\frac{|\delta \mathbf{x}(t)|}{|\delta \mathbf{x}(0)|}\right) $$
 
 ## PROJECT DESCRIPTION
