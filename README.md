@@ -1,10 +1,12 @@
 # Project Finite Differences: __The DOUBLE PENDULUM__
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
-> Caution : Binder can take some time (3 min <) to open.
-> Caution2 : Basic libraries are not recognised by Jupyter, resulting in the code unable to be executed.
 
-This README file is temporary.
+> Caution : Binder can take some time (3 min <) to open.
+>
+> Caution2 : Basic libraries are not recognised by Jupyter, resulting in the code unable to be executed.
+>
+> This README file is temporary.
 
 ## Description of the problem
 
