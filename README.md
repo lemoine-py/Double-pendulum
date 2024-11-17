@@ -1,36 +1,30 @@
-# LPHYS1303 - Simulation numérique pour la physique
+# Project Finite Differences: __The DOUBLE PENDULUM__
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
 > Caution : Binder can take some time (3 min <) to open.
 > Caution2 : Basic libraries are not recognised by Jupyter, resulting in the code unable to be executed.
 
-The following text is purely temporary.
+This README file is temporary.
 
-## Project Finite Differences: __The double pendulum__
+### Description of the problem
 
-The model of the double pendulum consists of two points objects with mass m, linked by two arms of fixed length l, subject to the gravity force in the vertical. The position of the two objects is completely defined by the angles $\theta_1$ and $\theta_2$ . This system has the characteristic of developing chaotic trajectories above a certain threshold in the energy of the initial condition.
+The model of the double pendulum consists of two points objects with mass $m$, linked by two arms of fixed length $l$, subject to the gravity force in the vertical. The position of the two objects is completely defined by the angles $\theta_1$ and $\theta_2$ . This system has the characteristic of developing chaotic trajectories above a certain threshold in the energy of the initial condition.
 
-### CHAOS AND LYAPUNOV EXPONENTS
+### Chaos and Lyapunov exponent
 
-The Lyapunov exponent is a mathematical concept that characterise the chaotic behaviour of a dynamical system. Let’s say that we have a system
+The Lyapunov exponent is a mathematical concept that characterizes the chaotic behaviour of a dynamical system. Let’s say that we have a system
 
-$$
-\frac{d \mathbf{x}}{d t}=\mathbf{F}(\mathbf{x}, t)
-$$
+$$ \frac{d \mathbf{x}}{d t}=\mathbf{F}(\mathbf{x}, t) $$
 
 We consider two trajectories separated by a distance $\delta \mathbf{x}(t)$, with $\delta \mathbf{x}(0)$ very small. The time evolution of the distance is given by the linear tangent operator $\mathbf{J}(x, t)$
-$$
-\frac{d \delta \mathbf{x}}{d t}=\mathbf{J}(\mathbf{x}, t) \delta \mathbf{x}
-$$
+$$ \frac{d \delta \mathbf{x}}{d t}=\mathbf{J}(\mathbf{x}, t) \delta \mathbf{x} $$
 
 The rates of growth of the distance in different directions of the phase space define the spectrum of Lyapunov exponents.
 
 A dynamical system shows chaos if at least one of its Lyapunov exponents is positive. The analysis of the full spectrum goes beyond the scope of this project, but the largest Lyapunov exponent can be computed as
-$$
-\lambda_{\max }=\lim _{t \rightarrow+\infty} \frac{1}{t} \ln \left(\frac{|\delta \mathbf{x}(t)|}{|\delta \mathbf{x}(0)|}\right)
-$$
+$$ \lambda_{\max }=\lim _{t \rightarrow+\infty} \frac{1}{t} \ln \left(\frac{|\delta \mathbf{x}(t)|}{|\delta \mathbf{x}(0)|}\right) $$
 
-### PROJECT DESCRIPTION
+## PROJECT DESCRIPTION
 
 1) Develop the mathematical model for the double pendulum (you should have seen it in some of your previous courses, otherwise it’s easy to find on textbooks online, or to develop yourself).
 2) Implement a numerical scheme with good properties for this type of system. Explain what motivated your choice.
