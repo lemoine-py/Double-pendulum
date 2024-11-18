@@ -1,10 +1,8 @@
 """ 
-This code is the complete code for the Double Pendulum project.
-By "complete", we mean that this code is self-sufficient and can be run as is.
-
-For clarity, the repository is divided into several modules, that are copy-pasted here.
-
+This code aims to compare two or more pendula 
+with different initial conditions and plot the results. 
 """
+
 # Libraries
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,14 +27,14 @@ t_max = 20
 h = 0.02 # Not smaller than that for the gif
 N = int(np.floor(t_max/h))+1
 
-# Initial conditions
+### Initial conditions
+# Pendulum 1
 w1_0 = 0
 w2_0 = 0
 th1_0 = np.pi + 0.1
 th2_0 = np.pi
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-
-
+# Pendulum 2
 ww1_0 = 0
 ww2_0 = 0
 thth1_0 = np.pi + 0.2
@@ -92,29 +90,37 @@ def solve_RK4(f, u0, h, t_max):
 #t, u = solve_RK4(big_F, u0, h, t_max)
 t1, u1 = solve_RK4(F_MIT, u0, h, t_max)
 tt1, uu1 = solve_RK4(F_MIT, uu0, h, t_max)
-
+# Pendulum 1
 th1 = u1[:,2] 
 th2 = u1[:,3]
 w1 = u1[:,0]
 w2 = u1[:,1]
-
+# Pendulum 2
 thth1 = uu1[:,2]
 thth2 = uu1[:,3]
 ww1 = uu1[:,0]
 ww2 = uu1[:,1]
+
+sol = [[th1, th2, w1, w2], [thth1, thth2, ww1, ww2]]
 
 ### Energy calculations
 T = np.zeros(N)
 V = np.zeros(N)
 E = np.zeros(N)
 
-for i in range(N):
-    T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
-    V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
-    E[i] = T[i] + V[i] # total energy
+def energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E):
+    for i in range(N):
+        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
+        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
+        E[i] = T[i] + V[i] # total energy
+    return T, V, E
+
+T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E)
+T2, V2, E2 = energy(m1, m2, l1, l2, g, ww1, ww2, thth1, thth2, T, V, E)
+
 
 # Plot the results
-fig, ax = plt.subplots(2, 2)
+fig, ax = plt.subplots(2, 4)
 
 ax[0, 0].plot(t1, w1)
 ax[0, 0].set_xlabel("Time (s)")
@@ -136,26 +142,46 @@ ax[1, 1].set_xlabel("Time (s)")
 ax[1, 1].set_title("theta2")
 ax[1, 1].grid()
 
-plt.tight_layout()
-#plt.savefig("angles_and_velocities.png")
+ax[0, 2].plot(tt1, ww1)
+ax[0, 2].set_xlabel("Time (s)")
+ax[0, 2].set_title("ww1")
+ax[0, 2].grid()
 
-#plt.plot(t, u[:,3])
+ax[0, 3].plot(tt1, ww2)
+ax[0, 3].set_xlabel("Time (s)")
+ax[0, 3].set_title("ww2")
+ax[0, 3].grid()
+
+ax[1, 2].plot(tt1, thth1)
+ax[1, 2].set_xlabel("Time (s)")
+ax[1, 2].set_title("thth1")
+ax[1, 2].grid()
+
+ax[1, 3].plot(tt1, thth2)
+ax[1, 3].set_xlabel("Time (s)")
+ax[1, 3].set_title("thth2")
+ax[1, 3].grid()
+
+plt.tight_layout()
+#plt.savefig("multiple_angles_and_velocities.png")
 
 plt.figure()
 plt.plot(th1, th2)  # brownian motion (theta1 vs theta2)
+plt.plot(thth1, thth2)
 plt.suptitle("Brownian motion of the double pendulum")
 plt.xlabel("Theta 1")
 plt.ylabel("Theta 2")
 plt.grid()
-#plt.savefig("brownian_motion.png")
+#plt.savefig("multiple_brownian_motion.png")
 
 plt.figure()
 plt.plot(t1, E) # total energy vs time
+plt.plot(tt1, E2)
 plt.suptitle("Total energy of the double pendulum")
 plt.xlabel("Time (s)")
 plt.ylabel("Total energy (J)")
 plt.grid()
-#plt.savefig("total_energy.png")
+#plt.savefig("multiple_total_energy.png")
 
 ### Position in cartesian coordinates
 
@@ -165,22 +191,37 @@ y1 = np.zeros(N) # y component of m1
 x2 = np.zeros(N) # x component of m2
 y2 = np.zeros(N) # y component of m2
 
+xx1 = np.zeros(N) # x component of m11
+yy1 = np.zeros(N) # y component of m11
+
+xx2 = np.zeros(N) # x component of m22
+yy2 = np.zeros(N) # y component of m22
+
 def cartesian(th1, th2, l1, l2):
-    pass
+    for i in range(N):
+        x1[i] = l1*np.sin(th1[i])
+        y1[i] = -l1*np.cos(th1[i])
+        
+        x2[i] = x1[i] + l2*np.sin(th2[i])
+        y2[i] = y1[i] - l2*np.cos(th2[i])
+    return x1, y1, x2, y2
 
-for i in range(N):
-    x1[i] = l1*np.sin(th1[i])
-    y1[i] = -l1*np.cos(th1[i])
-    
-    x2[i] = x1[i] + l2*np.sin(th2[i])
-    y2[i] = y1[i] - l2*np.cos(th2[i])
+x1, y1, x2, y2 = cartesian(th1, th2, l1, l2)
+xx1, yy1, xx2, yy2 = cartesian(thth1, thth2, l1, l2)
 
-plt.figure()
-plt.plot(x1, y1, label="m1")
-plt.plot(x2, y2, label="m2")
-plt.xlabel("x")
-plt.ylabel("y")
-plt.title("Position of the masses")
+figa, axa = plt.subplots(2,1)
+axa[0,0].plot(x1, y1, label="m1")
+axa[0,0].plot(x2, y2, label="m2")
+axa[0,0].xlabel("x")
+axa[0,0].ylabel("y")
+axa[0, 0].set_title("Pendulum 1")
+
+axa[1,0].plot(xx1, yy1, label="m11")
+axa[1,0].plot(xx2, yy2, label="m22")
+axa[1,0].xlabel("x")
+axa[1,0].ylabel("y")
+axa[1, 0].set_title("Pendulum 2")
+
 plt.legend()
 #plt.savefig("XY_position.png")
 
@@ -188,7 +229,7 @@ plt.show() # Shows at once every plot that has been produced before (in multiple
 
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
-    ln2.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
+    ln2.set_data([0, xx1[i], xx2[i]], [0, yy1[i], yy2[i]])
     
 fig, ax = plt.subplots(1,1, figsize=(4*(l1+l2),4*(l1+l2)))
 ax.set_facecolor('k')
