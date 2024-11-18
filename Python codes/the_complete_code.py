@@ -36,13 +36,6 @@ th1_0 = np.pi + 0.1
 th2_0 = np.pi
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
-
-ww1_0 = 0
-ww2_0 = 0
-thth1_0 = np.pi + 0.2
-thth2_0 = np.pi
-uu0 = np.array([ww1_0, ww2_0, thth1_0, thth2_0])
-
 ### Defining functions to solve the differential equation
 def big_F(w1, w2, th1, th2):
     """ Derivatives of the u array """
@@ -91,17 +84,11 @@ def solve_RK4(f, u0, h, t_max):
 ### Solving the differential equation and storing the solutions in u1
 #t, u = solve_RK4(big_F, u0, h, t_max)
 t1, u1 = solve_RK4(F_MIT, u0, h, t_max)
-tt1, uu1 = solve_RK4(F_MIT, uu0, h, t_max)
 
 th1 = u1[:,2] 
 th2 = u1[:,3]
 w1 = u1[:,0]
 w2 = u1[:,1]
-
-thth1 = uu1[:,2]
-thth2 = uu1[:,3]
-ww1 = uu1[:,0]
-ww2 = uu1[:,1]
 
 ### Energy calculations
 T = np.zeros(N)
@@ -188,15 +175,14 @@ plt.show() # Shows at once every plot that has been produced before (in multiple
 
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
-    ln2.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
-    
-fig, ax = plt.subplots(1,1, figsize=(4*(l1+l2),4*(l1+l2)))
+
+fig, ax = plt.subplots(1,1, figsize=(3*(l1+l2),3*(l1+l2)))
 ax.set_facecolor('k')
 #ax.get_xaxis().set_ticks([])    # enable this to hide x axis ticks
 #ax.get_yaxis().set_ticks([])    # enable this to hide y axis ticks
-ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color = "red", label = "Pendulum 1")
-ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color = "blue", label = "Pendulum 2")
+ln1, = ax.plot([], [], 'o--', lw=3, markersize=8, color = "gold", label = "Pendulum 1")
 ax.set_ylim(-1.5*(l1+l2),1.5*(l1+l2))
 ax.set_xlim(-1.5*(l1+l2),1.5*(l1+l2))
+ax.legend()
 ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50)
 ani.save('pen.gif',writer='pillow',fps=1/h)
