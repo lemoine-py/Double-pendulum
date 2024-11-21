@@ -47,7 +47,7 @@ u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 # Pendulum 2
 ww1_0 = 0
 ww2_0 = 0
-thth1_0 = np.pi + 0.15
+thth1_0 = np.pi + 0.101
 thth2_0 = np.pi
 uu0 = np.array([ww1_0, ww2_0, thth1_0, thth2_0])
 
@@ -153,7 +153,7 @@ ax[1, 1].set_title("theta2")
 ax[1, 1].grid()
 
 fig.tight_layout()
-#ax.savefig("angles1_and_velocities1.png")
+#fig.savefig("angles1_and_velocities1.png")
 
 figg, axx = plt.subplots(2,2)
 
@@ -178,7 +178,7 @@ axx[1, 1].set_title("thth2")
 axx[1, 1].grid()
 
 figg.tight_layout()
-#axx.savefig("angles2_and_velocities2.png")
+#figg.savefig("angles2_and_velocities2.png")
 
 plt.figure()
 plt.plot(th1, th2, label = "Pendulum 1")  # brownian motion (theta1 vs theta2)
@@ -235,7 +235,7 @@ axa[1].set_title("Pendulum 2")
 axa[1].legend()
 
 figa.tight_layout()
-#axa.savefig("XY_position.png")
+#figa.savefig("XY_position.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
