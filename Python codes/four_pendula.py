@@ -157,22 +157,22 @@ T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222, T, V, E)
 # Plot the solutions i.e. all 4 components of u
 fig, ax = plt.subplots(2, 2)
 
-ax[0, 0].plot(t1, w1)
+ax[0, 0].plot(t, w1)
 ax[0, 0].set_xlabel("Time (s)")
 ax[0, 0].set_title("w1")
 ax[0, 0].grid()
     
-ax[0, 1].plot(t1, w2)
+ax[0, 1].plot(t, w2)
 ax[0, 1].set_xlabel("Time (s)")
 ax[0, 1].set_title("w2")
 ax[0, 1].grid()
     
-ax[1, 0].plot(t1, th1)
+ax[1, 0].plot(t, th1)
 ax[1, 0].set_xlabel("Time (s)")
 ax[1, 0].set_title("theta1")
 ax[1, 0].grid()
     
-ax[1, 1].plot(t1, th2)
+ax[1, 1].plot(t, th2)
 ax[1, 1].set_xlabel("Time (s)")
 ax[1, 1].set_title("theta2")
 ax[1, 1].grid()
@@ -182,22 +182,22 @@ fig.tight_layout()
 
 figg, axx = plt.subplots(2,2)
 
-axx[0, 0].plot(tt1, w11)
+axx[0, 0].plot(t, w11)
 axx[0, 0].set_xlabel("Time (s)")
 axx[0, 0].set_title("w11")
 axx[0, 0].grid()
 
-axx[0, 1].plot(tt1, w22)
+axx[0, 1].plot(t, w22)
 axx[0, 1].set_xlabel("Time (s)")
 axx[0, 1].set_title("w22")
 axx[0, 1].grid()
 
-axx[1, 0].plot(tt1, th11)
+axx[1, 0].plot(t, th11)
 axx[1, 0].set_xlabel("Time (s)")
 axx[1, 0].set_title("th11")
 axx[1, 0].grid()
 
-axx[1, 1].plot(tt1, th22)
+axx[1, 1].plot(t, th22)
 axx[1, 1].set_xlabel("Time (s)")
 axx[1, 1].set_title("th22")
 axx[1, 1].grid()
@@ -218,8 +218,8 @@ plt.grid()
 #plt.savefig("multiple_brownian_motion.png")
 
 plt.figure()
-plt.plot(t1, E, label = "Pendulum 1") # total energy vs time
-plt.plot(tt1, E2, label = "Pendulum 2")
+plt.plot(t, E, label = "Pendulum 1") # total energy vs time
+plt.plot(t, E2, label = "Pendulum 2")
 plt.suptitle("Total energy of the double pendulum")
 plt.xlabel("Time (s)")
 plt.ylabel("Total energy (J)")
@@ -287,7 +287,7 @@ def animate(i):
     return ln1, ln2
 
 # Création et sauvegarde de l'animation
-ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50, blit=True)
+ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
 ani.save('pen.gif', writer='pillow', fps=1/h)
 
 plt.show()
