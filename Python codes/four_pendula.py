@@ -41,29 +41,26 @@ th2 = np.repeat(np.pi, k)
 # Pendulum 1
 w1_0 = 0
 w2_0 = 0
-th1_0 = np.pi + 0.1
-th2_0 = np.pi
+th1_0 = np.pi/2 + 0.1
+th2_0 = np.pi/2
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-
 # Pendulum 2
 w11_0 = 0
 w22_0 = 0
-th11_0 = np.pi + 0.101
-th22_0 = np.pi
+th11_0 = np.pi/2 + 0.101
+th22_0 = np.pi/2
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
-
 # Pendulum 3
 w111_0 = 0
 w222_0 = 0
-th111_0 = np.pi + 0.102
-th222_0 = np.pi
+th111_0 = np.pi/2 + 0.102
+th222_0 = np.pi/2
 u000 = np.array([w111_0, w222_0, th111_0, th222_0])
-
 # Pendulum 4
 w1111_0 = 0
 w2222_0 = 0
-th1111_0 = np.pi + 0.103
-th2222_0 = np.pi
+th1111_0 = np.pi/2 + 0.103
+th2222_0 = np.pi/2
 u0000 = np.array([w1111_0, w2222_0, th1111_0, th2222_0])
 
 ### Defining functions to solve the differential equation
@@ -136,7 +133,8 @@ th2222 = u1111[:,3]
 w1111 = u1111[:,0]
 w2222 = u1111[:,1]
 
-### Energy calculations
+"""
+### Energy calculations ### --------------------------------------------------------------------------------
 T = np.zeros(N)
 V = np.zeros(N)
 E = np.zeros(N)
@@ -153,6 +151,7 @@ T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22, T, V, E)
 T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222, T, V, E)
 T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222, T, V, E)
 
+### ---------------------------------------------------------------------------------------------------------
 
 # Plot the solutions i.e. all 4 components of u
 fig, ax = plt.subplots(2, 2)
@@ -205,6 +204,7 @@ axx[1, 1].grid()
 figg.tight_layout()
 #figg.savefig("angles2_and_velocities2.png")
 
+# Brownian Motion plot (th1 vs th2)
 plt.figure()
 plt.plot(th1, th2, label = "Pendulum 1")  # brownian motion (theta1 vs theta2)
 plt.plot(th11, th22, label = "Pendulum 2")
@@ -215,7 +215,7 @@ plt.xlabel("Theta 1")
 plt.ylabel("Theta 2")
 plt.legend()
 plt.grid()
-#plt.savefig("multiple_brownian_motion.png")
+#plt.savefig("four_brownian_motion.png")
 
 plt.figure()
 plt.plot(t, E, label = "Pendulum 1") # total energy vs time
@@ -225,8 +225,8 @@ plt.xlabel("Time (s)")
 plt.ylabel("Total energy (J)")
 plt.legend()
 plt.grid()
-#plt.savefig("multiple_total_energy.png")
-
+#plt.savefig("four_total_energy.png")
+"""
 ### Position in cartesian coordinates
 
 def cartesian(tha, thb, la, lb):
@@ -244,25 +244,41 @@ def cartesian(tha, thb, la, lb):
     return xa, ya, xb, yb
 
 x1, y1, x2, y2 = cartesian(th1, th2, l1, l2)
-xx1, yy1, xx2, yy2 = cartesian(th11, th22, l1, l2)
+x11, y11, x22, y22 = cartesian(th11, th22, l1, l2)
+x111, y111, x222, y222 = cartesian(th111, th222, l1, l2)
+x1111, y1111, x2222, y2222 = cartesian(th1111, th2222, l1, l2)
 
-figa, axa = plt.subplots(2,1)
-axa[0].plot(x1, y1, label="m1")
-axa[0].plot(x2, y2, label="m2")
-axa[0].set_xlabel("x")
-axa[0].set_ylabel("y")
-axa[0].set_title("Pendulum 1")
-axa[0].legend()
+figa, axa = plt.subplots(2,2)
+axa[0,0].plot(x1, y1, label="m1")
+axa[0,0].plot(x2, y2, label="m2")
+axa[0,0].set_xlabel("x")
+axa[0,0].set_ylabel("y")
+axa[0,0].set_title("Pendulum 1")
+axa[0,0].legend()
 
-axa[1].plot(xx1, yy1, label="m11")
-axa[1].plot(xx2, yy2, label="m22")
-axa[1].set_xlabel("x")
-axa[1].set_ylabel("y")
-axa[1].set_title("Pendulum 2")
-axa[1].legend()
+axa[0,1].plot(x11, y11, label="m1")
+axa[0,1].plot(x22, y22, label="m2")
+axa[0,1].set_xlabel("x")
+axa[0,1].set_ylabel("y")
+axa[0,1].set_title("Pendulum 2")
+axa[0,1].legend()
+
+axa[1,0].plot(x111, y111, label="m1")
+axa[1,0].plot(x222, y222, label="m2")
+axa[1,0].set_xlabel("x")
+axa[1,0].set_ylabel("y")
+axa[1,0].set_title("Pendulum 3")
+axa[1,0].legend()
+
+axa[1,1].plot(x1111, y1111, label="m1")
+axa[1,1].plot(x2222, y2222, label="m2")
+axa[1,1].set_xlabel("x")
+axa[1,1].set_ylabel("y")
+axa[1,1].set_title("Pendulum 4")
+axa[1,1].legend()
 
 figa.tight_layout()
-#figa.savefig("XY_position.png")
+#figa.savefig("four_XY_position.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
@@ -276,14 +292,18 @@ ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.plot(0, 0, 'wo')  # Point fixe (origine)
 
 # Initialisation des lignes pour les pendules
-ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendule 1")
-ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendule 2")
+ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
+ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
+ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="yellow", label="Pendulum 3")
+ln4, = ax.plot([], [], 'o-', lw=3, markersize=8, color="white", label="Pendulum 4")
 ax.legend()
 
 # Fonction d'animation
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendule 1
-    ln2.set_data([0, xx1[i], xx2[i]], [0, yy1[i], yy2[i]])  # Pendule 2
+    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendule 2
+    ln3.set_data([0, x111[i], x222[i]], [0, y111[i], y222[i]])  # Pendule 3
+    ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendule 4
     return ln1, ln2
 
 # Création et sauvegarde de l'animation
