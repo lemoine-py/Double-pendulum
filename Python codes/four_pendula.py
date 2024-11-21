@@ -60,10 +60,10 @@ th222_0 = np.pi
 u000 = np.array([w111_0, w222_0, th111_0, th222_0])
 
 # Pendulum 4
-w1111 = 0
-w2222 = 0
-th1111 = np.pi + 0.103
-th2222 = np.pi
+w1111_0 = 0
+w2222_0 = 0
+th1111_0 = np.pi + 0.103
+th2222_0 = np.pi
 u0000 = np.array([w1111_0, w2222_0, th1111_0, th2222_0])
 
 ### Defining functions to solve the differential equation
