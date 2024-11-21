@@ -111,24 +111,6 @@ thth2 = uu1[:,3]
 ww1 = uu1[:,0]
 ww2 = uu1[:,1]
 
-sol = [[th1, th2, w1, w2], [thth1, thth2, ww1, ww2]]
-
-### Energy calculations
-T = np.zeros(N)
-V = np.zeros(N)
-E = np.zeros(N)
-
-def energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E):
-    for i in range(N):
-        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
-        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
-        E[i] = T[i] + V[i] # total energy
-    return T, V, E
-
-T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E)
-T2, V2, E2 = energy(m1, m2, l1, l2, g, ww1, ww2, thth1, thth2, T, V, E)
-
-
 # Plot the solutions i.e. all 4 components of u
 fig, ax = plt.subplots(2, 2)
 
@@ -153,7 +135,7 @@ ax[1, 1].set_title("theta2")
 ax[1, 1].grid()
 
 fig.tight_layout()
-#fig.savefig("angles1_and_velocities1.png")
+#fig.savefig("first_angles_and_velocities.png")
 
 figg, axx = plt.subplots(2,2)
 
@@ -178,7 +160,7 @@ axx[1, 1].set_title("thth2")
 axx[1, 1].grid()
 
 figg.tight_layout()
-#figg.savefig("angles2_and_velocities2.png")
+#figg.savefig("second_angles_and_velocities.png")
 
 plt.figure()
 plt.plot(th1, th2, label = "Pendulum 1")  # brownian motion (theta1 vs theta2)
@@ -188,8 +170,24 @@ plt.xlabel("Theta 1")
 plt.ylabel("Theta 2")
 plt.legend()
 plt.grid()
-#plt.savefig("multiple_brownian_motion.png")
+#plt.savefig("two_brownian_motion.png")
 
+### Energy calculations ---------------------------------------------------------------------
+T = np.zeros(N)
+V = np.zeros(N)
+E = np.zeros(N)
+
+def energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E):
+    for i in range(N):
+        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
+        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
+        E[i] = T[i] + V[i] # total energy
+    return T, V, E
+
+T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E)
+T2, V2, E2 = energy(m1, m2, l1, l2, g, ww1, ww2, thth1, thth2, T, V, E)
+
+# Plot the energy
 plt.figure()
 plt.plot(t1, E, label = "Pendulum 1") # total energy vs time
 plt.plot(tt1, E2, label = "Pendulum 2")
@@ -198,9 +196,9 @@ plt.xlabel("Time (s)")
 plt.ylabel("Total energy (J)")
 plt.legend()
 plt.grid()
-#plt.savefig("multiple_total_energy.png")
+#plt.savefig("two_total_energy.png")
 
-### Position in cartesian coordinates
+### Position in cartesian coordinates ---------------------------------------------------------------------
 
 def cartesian(tha, thb, la, lb):
     xa = np.zeros(N) # x component of m1
@@ -219,6 +217,7 @@ def cartesian(tha, thb, la, lb):
 x1, y1, x2, y2 = cartesian(th1, th2, l1, l2)
 xx1, yy1, xx2, yy2 = cartesian(thth1, thth2, l1, l2)
 
+# Plots the paths
 figa, axa = plt.subplots(2,1)
 axa[0].plot(x1, y1, label="m1")
 axa[0].plot(x2, y2, label="m2")
@@ -235,31 +234,28 @@ axa[1].set_title("Pendulum 2")
 axa[1].legend()
 
 figa.tight_layout()
-#figa.savefig("XY_position.png")
+#figa.savefig("two_XY_paths.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
 
-### ANIMATION GIF
+### ANIMATION GIF ---------------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
 ax.set_xlim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
-ax.plot(0, 0, 'wo')  # Point fixe (origine)
+ax.plot(0, 0, 'wo')  # Origin
 
-# Initialisation des lignes pour les pendules
 ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendule 1")
 ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendule 2")
 ax.legend()
 
-# Fonction d'animation
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendule 1
     ln2.set_data([0, xx1[i], xx2[i]], [0, yy1[i], yy2[i]])  # Pendule 2
     return ln1, ln2
 
-# Création et sauvegarde de l'animation
 ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50, blit=True)
 ani.save('pen.gif', writer='pillow', fps=1/h)
 

@@ -180,7 +180,7 @@ fig, ax = plt.subplots(1,1, figsize=(3*(l1+l2),3*(l1+l2)))
 ax.set_facecolor('k')
 #ax.get_xaxis().set_ticks([])    # enable this to hide x axis ticks
 #ax.get_yaxis().set_ticks([])    # enable this to hide y axis ticks
-ln1, = ax.plot([], [], 'o--', lw=3, markersize=8, color = "gold", label = "Pendulum 1")
+ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color = "gold", label = "Pendulum 1")
 ax.set_ylim(-1.5*(l1+l2),1.5*(l1+l2))
 ax.set_xlim(-1.5*(l1+l2),1.5*(l1+l2))
 ax.legend()

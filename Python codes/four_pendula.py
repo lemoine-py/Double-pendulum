@@ -227,7 +227,7 @@ plt.legend()
 plt.grid()
 #plt.savefig("four_total_energy.png")
 """
-### Position in cartesian coordinates
+### Positions in cartesian coordinates ---------------------------------------------------------------------
 
 def cartesian(tha, thb, la, lb):
     xa = np.zeros(N) # x component of m1
@@ -248,6 +248,7 @@ x11, y11, x22, y22 = cartesian(th11, th22, l1, l2)
 x111, y111, x222, y222 = cartesian(th111, th222, l1, l2)
 x1111, y1111, x2222, y2222 = cartesian(th1111, th2222, l1, l2)
 
+# Plot the paths of the pendula
 figa, axa = plt.subplots(2,2)
 axa[0,0].plot(x1, y1, label="m1")
 axa[0,0].plot(x2, y2, label="m2")
@@ -278,7 +279,7 @@ axa[1,1].set_title("Pendulum 4")
 axa[1,1].legend()
 
 figa.tight_layout()
-#figa.savefig("four_XY_position.png")
+#figa.savefig("four_XY_paths.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
@@ -289,16 +290,15 @@ fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
 ax.set_xlim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
-ax.plot(0, 0, 'wo')  # Point fixe (origine)
+ax.plot(0, 0, 'o', color = "green")  # Point fixe (origine)
 
-# Initialisation des lignes pour les pendules
+# Initialization of the pendula
 ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
 ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
 ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="yellow", label="Pendulum 3")
 ln4, = ax.plot([], [], 'o-', lw=3, markersize=8, color="white", label="Pendulum 4")
 ax.legend()
 
-# Fonction d'animation
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendule 1
     ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendule 2
@@ -306,7 +306,6 @@ def animate(i):
     ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendule 4
     return ln1, ln2
 
-# Création et sauvegarde de l'animation
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
 ani.save('pen.gif', writer='pillow', fps=1/h)
 
