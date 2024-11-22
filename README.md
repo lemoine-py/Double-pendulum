@@ -4,7 +4,7 @@
 
 > Caution : Binder can take some time (3 min <) to open.
 >
-> Caution2 : Basic libraries are not recognised by Jupyter, resulting in the code unable to be executed.
+> Caution2 : Basic libraries are not recognised by JupyterLab, resulting in the code unable to be executed within the Binder. To execute the code, please open the <.ipynb> file elsewhere.
 >
 > This README file is temporary.
 
