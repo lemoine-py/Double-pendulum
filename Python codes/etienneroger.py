@@ -147,6 +147,12 @@ ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50)
 ani.save('pen.gif',writer='pillow',fps=1/h)
 
 # Jacobian
+m1 = 1
+m2 = 1
+l1 = 1
+l2 = 1
+g = 9.81
+
 def jacobian(th1, th2, w1, w2):
     jac = np.zeros((4,4))
     
@@ -176,6 +182,46 @@ def jacobian(th1, th2, w1, w2):
     return jac
 
 
+
+
+def lyapunov(th):
+    N = 60
+    M = jacobian(th,th,0,0)
+    dx_0 = [0, 10**(-10), 0, 0]
+    t = np.linspace(0,N,N)
+    dx = np.zeros((N,4))
+    for i in range(N):
+        dx[i] = sp.linalg.expm(M*t[i]) @ dx_0
+
+    norm = np.zeros(N)
+    lyap = np.zeros(N)
+    for i in range(N):
+        norm[i] = np.linalg.norm(dx[i])
+        lyap[i] = np.log(norm[i]/norm[0])*1/t[i]
+    return lyap[-1]
+N = 100
+M = jacobian(0.1,1,0,0)
+dx_0 = [0, 0, 10**(-10), 0]
+t = np.linspace(0,N,N)
+dx = np.zeros((N,4))
+for i in range(N):
+    dx[i] = sp.linalg.expm(M*t[i]) @ dx_0
+
+norm = np.zeros(N)
+lyap = np.zeros(N)
+for i in range(N):
+    norm[i] = np.linalg.norm(dx[i])
+    lyap[i] = np.log(norm[i]/norm[0])*1/t[i]
+plt.plot(lyap)
+eigenvalue, eigenvector = np.linalg.eig(M)
+"""
+N = 100
+th = np.linspace(0,2*np.pi,N)
+lyap = np.zeros(N)
+for i in range (N):
+    lyap[i] = lyapunov(th[i])
+plt.plot(th,lyap)
+"""
 
 
 
