@@ -185,4 +185,4 @@ ax.set_ylim(-1.5*(l1+l2),1.5*(l1+l2))
 ax.set_xlim(-1.5*(l1+l2),1.5*(l1+l2))
 ax.legend()
 ani = animation.FuncAnimation(fig, animate, frames=len(t1), interval=50)
-ani.save('pen.gif',writer='pillow',fps=1/h)
+#ani.save('pen.gif',writer='pillow',fps=1/h) # Save the animation as a gif
