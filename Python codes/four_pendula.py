@@ -41,26 +41,26 @@ th2 = np.repeat(np.pi, k)
 # Pendulum 1
 w1_0 = 0
 w2_0 = 0
-th1_0 = np.pi/2 + 0.1
-th2_0 = np.pi/2
+th1_0 = 1.3 + 0.1
+th2_0 = 1.3 + 0.1
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 # Pendulum 2
 w11_0 = 0
 w22_0 = 0
-th11_0 = np.pi/2 + 0.101
-th22_0 = np.pi/2
+th11_0 = 1.3 + 0.2
+th22_0 = 1.3 + 0.2
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
 # Pendulum 3
 w111_0 = 0
 w222_0 = 0
-th111_0 = np.pi/2 + 0.102
-th222_0 = np.pi/2
+th111_0 = 1.3 + 0.3
+th222_0 = 1.3 + 0.3
 u000 = np.array([w111_0, w222_0, th111_0, th222_0])
 # Pendulum 4
 w1111_0 = 0
 w2222_0 = 0
-th1111_0 = np.pi/2 + 0.103
-th2222_0 = np.pi/2
+th1111_0 = 1.3 + 0.4
+th2222_0 = 1.3 + 0.4
 u0000 = np.array([w1111_0, w2222_0, th1111_0, th2222_0])
 
 ### Defining functions to solve the differential equation
