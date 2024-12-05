@@ -32,8 +32,8 @@ N = int(np.floor(t_max/h))+1
 # Initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = np.pi + 0.1
-th2_0 = np.pi
+th1_0 = 1.4
+th2_0 = 1.4
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
 ### Defining functions to solve the differential equation
