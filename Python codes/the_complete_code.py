@@ -37,23 +37,8 @@ th2_0 = 1.4
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
 ### Defining functions to solve the differential equation
-def big_F(w1, w2, th1, th2):
+def F_deriv(w1, w2, th1, th2): 
     """ Derivatives of the u array """
-    
-    # Separating the numerator and the denominator of the equations for clarity
-    num1 = -1*m2*(l1*w1**2*np.sin(th1-th2)-g*np.sin(th1-th2))*np.cos(th1-th2)-m2*l2*w2**2*np.sin(th1-th2)-(m1+m2)*g*np.sin(th1)
-    denom1 = ((m1+m2)*l1-l1*np.cos(th1-th2)**2*m2)
-    
-    num2 = -1*(m1+m2)*(l1*w1**2*np.sin(th1-th2)-g*np.sin(th2))/np.cos(th1-th2)-m2*l2*w2**2*np.sin(th1-th2)-(m1+m2)*g*np.sin(th1)
-    denom2 = -1*l2*(m1+m2)/np.cos(th1-th2)+m2*l2*np.cos(th1-th2)
-    
-    w1_dot = num1/denom1
-    w2_dot = num2/denom2
-    
-    return np.array([w1_dot, w2_dot, w1, w2])
-
-def F_MIT(w1, w2, th1, th2): 
-    """MIT version of the derivative"""
 
     num1 = -g*(2*m1+m2)*np.sin(th1)-m2*g*np.sin(th1-2*th2)-2*np.sin(th1-th2)*m2*(w2**2*l2+w1**2*l1*np.cos(th1-th2))
     denom1 = l1*(2*m1+m2-m2*np.cos(2*th1-2*th2))
@@ -83,7 +68,7 @@ def solve_RK4(f, u0, h, t_max):
 
 ### Solving the differential equation and storing the solutions in u1
 #t, u = solve_RK4(big_F, u0, h, t_max)
-t1, u1 = solve_RK4(F_MIT, u0, h, t_max)
+t1, u1 = solve_RK4(F_deriv, u0, h, t_max)
 
 th1 = u1[:,2] 
 th2 = u1[:,3]

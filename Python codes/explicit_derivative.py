@@ -1,3 +1,5 @@
+""" This python code computes the Jacobian of the system of differential equations of the double pendulum. """
+
 from sympy import symbols, sin, cos, diff
 
 # Define variables
@@ -15,7 +17,7 @@ jacobian = [
     [diff(f2, var) for var in (th1, th2, w1, w2)],
 ]
 
-# Displath2 results
+# Display the results
 for i, row2 in enumerate(jacobian):
     print(f"Row2 {i + 1}:")
     for j, element in enumerate(row2):

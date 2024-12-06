@@ -1,5 +1,5 @@
 """ 
-This code aims to compare two or more pendula 
+This code aims to compare four pendula 
 with different initial conditions and plot the results. 
 """
 
@@ -30,14 +30,6 @@ t = np.linspace(0, t_max, N)
 
 ### Initial conditions
 
-"""
-k = 4 # Number of pendula to simulate
-
-w_0 = np.zeros((2,k)) # Matrix storing all the null w1_0 and w2_0 for each pendula
-th1 = [np.pi + i * 0.05 for i in range(k)]
-th2 = np.repeat(np.pi, k)
-"""
-
 # Pendulum 1
 w1_0 = 0
 w2_0 = 0
@@ -64,23 +56,8 @@ th2222_0 = 1.3 + 0.4
 u0000 = np.array([w1111_0, w2222_0, th1111_0, th2222_0])
 
 ### Defining functions to solve the differential equation
-def big_F(w1, w2, th1, th2):
+def F_deriv(w1, w2, th1, th2): 
     """ Derivatives of the u array """
-    
-    # Separating the numerator and the denominator of the equations for clarity
-    num1 = -1*m2*(l1*w1**2*np.sin(th1-th2)-g*np.sin(th1-th2))*np.cos(th1-th2)-m2*l2*w2**2*np.sin(th1-th2)-(m1+m2)*g*np.sin(th1)
-    denom1 = ((m1+m2)*l1-l1*np.cos(th1-th2)**2*m2)
-    
-    num2 = -1*(m1+m2)*(l1*w1**2*np.sin(th1-th2)-g*np.sin(th2))/np.cos(th1-th2)-m2*l2*w2**2*np.sin(th1-th2)-(m1+m2)*g*np.sin(th1)
-    denom2 = -1*l2*(m1+m2)/np.cos(th1-th2)+m2*l2*np.cos(th1-th2)
-    
-    w1_dot = num1/denom1
-    w2_dot = num2/denom2
-    
-    return np.array([w1_dot, w2_dot, w1, w2])
-
-def F_MIT(w1, w2, th1, th2): 
-    """MIT version of the derivative"""
 
     num1 = -g*(2*m1+m2)*np.sin(th1)-m2*g*np.sin(th1-2*th2)-2*np.sin(th1-th2)*m2*(w2**2*l2+w1**2*l1*np.cos(th1-th2))
     denom1 = l1*(2*m1+m2-m2*np.cos(2*th1-2*th2))
@@ -106,11 +83,10 @@ def solve_RK4(f, u0, h, t):
     return u
 
 ### Solving the differential equation and storing the solutions in u1
-#u = solve_RK4(big_F, u0, h, t)
-u1 = solve_RK4(F_MIT, u0, h, t)
-u11 = solve_RK4(F_MIT, u00, h, t)
-u111 = solve_RK4(F_MIT, u000, h, t)
-u1111 = solve_RK4(F_MIT, u0000, h, t)
+u1 = solve_RK4(F_deriv, u0, h, t)
+u11 = solve_RK4(F_deriv, u00, h, t)
+u111 = solve_RK4(F_deriv, u000, h, t)
+u1111 = solve_RK4(F_deriv, u0000, h, t)
 
 # Pendulum 1
 th1 = u1[:,2] 
@@ -135,21 +111,35 @@ w2222 = u1111[:,1]
 
 """
 ### Energy calculations ### --------------------------------------------------------------------------------
-T = np.zeros(N)
-V = np.zeros(N)
-E = np.zeros(N)
+# Problem : somehow the energy seems to be actually conserved according to the plot, 
+# there must be a mistake in the following code
 
-def energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E):
+def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
+    T = np.zeros(N) # kinetic energy
+    V = np.zeros(N) # potential energy
+    E = np.zeros(N) # total energy
     for i in range(N):
-        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) # kinetic energy
-        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) # potential energy
-        E[i] = T[i] + V[i] # total energy
+        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) 
+        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) 
+        E[i] = T[i] + V[i] 
     return T, V, E
 
-T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2, T, V, E)
-T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22, T, V, E)
-T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222, T, V, E)
-T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222, T, V, E)
+T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2)
+T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22)
+T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222)
+T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
+
+plt.figure()
+plt.plot(t, E1, label = "Pendulum 1") # total energy vs time
+plt.plot(t, E2, label = "Pendulum 2")
+plt.plot(t, E3, label = "Pendulum 3")
+plt.plot(t, E4, label = "Pendulum 4")
+plt.suptitle("Total energy of the double pendulum")
+plt.xlabel("Time (s)")
+plt.ylabel("Total energy (J)")
+plt.legend()
+plt.grid()
+#plt.savefig("four_total_energy.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 
@@ -217,15 +207,6 @@ plt.legend()
 plt.grid()
 #plt.savefig("four_brownian_motion.png")
 
-plt.figure()
-plt.plot(t, E, label = "Pendulum 1") # total energy vs time
-plt.plot(t, E2, label = "Pendulum 2")
-plt.suptitle("Total energy of the double pendulum")
-plt.xlabel("Time (s)")
-plt.ylabel("Total energy (J)")
-plt.legend()
-plt.grid()
-#plt.savefig("four_total_energy.png")
 """
 ### Positions in cartesian coordinates ---------------------------------------------------------------------
 
@@ -307,6 +288,6 @@ def animate(i):
     return ln1, ln2
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
-ani.save('pen.gif', writer='pillow', fps=1/h)
+#ani.save('pen.gif', writer='pillow', fps=1/h)
 
 plt.show()
