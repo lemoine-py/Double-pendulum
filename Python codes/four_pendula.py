@@ -109,10 +109,7 @@ th2222 = u1111[:,3]
 w1111 = u1111[:,0]
 w2222 = u1111[:,1]
 
-"""
 ### Energy calculations ### --------------------------------------------------------------------------------
-# Problem : somehow the energy seems to be actually conserved according to the plot, 
-# there must be a mistake in the following code
 
 def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
     T = np.zeros(N) # kinetic energy
@@ -130,17 +127,17 @@ T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222)
 T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
 
 plt.figure()
-plt.plot(t, E1, label = "Pendulum 1") # total energy vs time
-plt.plot(t, E2, label = "Pendulum 2")
-plt.plot(t, E3, label = "Pendulum 3")
-plt.plot(t, E4, label = "Pendulum 4")
-plt.suptitle("Total energy of the double pendulum")
+plt.plot(t, E1-E1[0], label = "Pendulum 1", color = "magenta") # total energy vs time
+plt.plot(t, E2-E2[0], label = "Pendulum 2", color = "cyan")
+plt.plot(t, E3-E3[0], label = "Pendulum 3", color = "gold")
+plt.plot(t, E4-E4[0], label = "Pendulum 4", color = "gray")
+plt.suptitle("Total energy losses of the double pendulum")
 plt.xlabel("Time (s)")
-plt.ylabel("Total energy (J)")
+plt.ylabel("Total energy loss (J)")
 plt.legend()
 plt.grid()
-#plt.savefig("four_total_energy.png")
-
+#plt.savefig("four_total_energy_loss.png")
+"""
 ### ---------------------------------------------------------------------------------------------------------
 
 # Plot the solutions i.e. all 4 components of u
