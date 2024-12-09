@@ -164,15 +164,18 @@ dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
 th = np.linspace(0,np.pi,30) # Angle array
 lya_th = np.zeros(30) # "Lyapunov for each angle" array
 
-for p in range(30):
-    u0 = np.array([0, 0, th[p], 0])
-    lya = np.zeros(50)
-    for i in range(50):
-        t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
-        lya[i], dx = lyapunov(u0, dx0)
-        u0 = u1 # updating initial conditions
-        dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
-    lya_th[p] = np.average(lya)
+steps = 30*50
+with tqdm(total=steps) as pbar: # Progression bar
+    for p in range(30):
+        u0 = np.array([0, 0, th[p], 0])
+        lya = np.zeros(50)
+        for i in range(50):
+            t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
+            lya[i], dx = lyapunov(u0, dx0)
+            u0 = u1 # updating initial conditions
+            dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
+            pbar.update(1)  # Updates the progression bar
+        lya_th[p] = np.average(lya)
 
 plt.figure()
 plt.plot(th, lya_th, label = "Lyapunov exponent average")
@@ -190,15 +193,18 @@ dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
 th = np.linspace(0,np.pi,30) # Angle array
 lya_th = np.zeros(30) # "Lyapunov for each angle" array
 
-for p in range(30):
-    u0 = np.array([0, 0, 0, th[p]])
-    lya = np.zeros(50)
-    for i in range(50):
-        t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
-        lya[i], dx = lyapunov(u0, dx0)
-        u0 = u1 # updating initial conditions
-        dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
-    lya_th[p] = np.average(lya)
+steps = 30*50
+with tqdm(total=steps) as pbar: # Progression bar
+    for p in range(30):
+        u0 = np.array([0, 0, 0, th[p]])
+        lya = np.zeros(50)
+        for i in range(50):
+            t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
+            lya[i], dx = lyapunov(u0, dx0)
+            u0 = u1 # updating initial conditions
+            dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
+            pbar.update(1)  # Updates the progression bar
+        lya_th[p] = np.average(lya)
 
 plt.figure()
 plt.plot(th, lya_th, label = "Lyapunov exponent average")
