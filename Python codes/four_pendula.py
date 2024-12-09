@@ -192,25 +192,14 @@ figg.tight_layout()
 #figg.savefig("angles2_and_velocities2.png")
 
 ### Brownian Motion plot (th1 vs th2) ###
-thetawrap1 = (th1 + np.pi) % (2*np.pi) - np.pi
-thetawrap11 = (th11 + np.pi) % (2*np.pi) - np.pi
-thetawrap111 = (th111 + np.pi) % (2*np.pi) - np.pi
-thetawrap1111 = (th1111 + np.pi) % (2*np.pi) - np.pi
-thetawrap2 = (th2 + np.pi) % (2*np.pi) - np.pi
-thetawrap22 = (th22 + np.pi) % (2*np.pi) - np.pi
-thetawrap222 = (th222 + np.pi) % (2*np.pi) - np.pi
-thetawrap2222 = (th2222 + np.pi) % (2*np.pi) - np.pi
 fig, ax = plt.subplots()
-ax.plot(thetawrap1, thetawrap2, label = "Pendulum 1", color = "magenta")
-ax.plot(thetawrap11, thetawrap22, label = "Pendulum 2", color = "cyan")
-ax.plot(thetawrap111, thetawrap222, label = "Pendulum 3", color = "gold")
-ax.plot(thetawrap1111, thetawrap2222, label = "Pendulum 4", color = "grey")
+ax.plot(th1, th2, label = "Pendulum 1", color = "magenta")
+ax.plot(th11, th22, label = "Pendulum 2", color = "cyan")
+ax.plot(th111, th222, label = "Pendulum 3", color = "gold")
+ax.plot(th1111, th2222, label = "Pendulum 4", color = "grey")
 ax.set_title("Brownian motion of the double pendulum")
 ax.set_xlabel(r"$\theta_1$")
 ax.set_ylabel(r"$\theta_2$")
-ax.set_xlim(-np.pi, np.pi)
-ax.set_ylim(-np.pi, np.pi)
-ax.set_aspect('equal')
 ax.legend()
 ax.grid()
 #fig.savefig("four_brownian_motion.png")
