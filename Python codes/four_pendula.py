@@ -126,41 +126,41 @@ T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22)
 T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222)
 T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
 
+# Plotting the difference between the initial total energy and the computed total energy along time
 plt.figure()
-plt.plot(t, E1-E1[0], label = "Pendulum 1", color = "magenta") # total energy vs time
-plt.plot(t, E2-E2[0], label = "Pendulum 2", color = "cyan")
-plt.plot(t, E3-E3[0], label = "Pendulum 3", color = "gold")
-plt.plot(t, E4-E4[0], label = "Pendulum 4", color = "gray")
-plt.suptitle("Total energy losses of the double pendulum")
-plt.xlabel("Time (s)")
-plt.ylabel("Total energy loss (J)")
+plt.plot(t, E1[0]-E1, label = "Pendulum 1", color = "magenta") # total energy vs time
+plt.plot(t, E2[0]-E2, label = "Pendulum 2", color = "cyan")
+plt.plot(t, E3[0]-E3, label = "Pendulum 3", color = "gold")
+plt.plot(t, E4[0]-E4, label = "Pendulum 4", color = "gray")
+plt.suptitle("Total energy losses due to RK4 inacurracy")
+plt.xlabel("Time [s]")
+plt.ylabel("E(t=0) - E(t) [J]")
 plt.legend()
 plt.grid()
 #plt.savefig("four_total_energy_loss.png")
-"""
-### ---------------------------------------------------------------------------------------------------------
 
-# Plot the solutions i.e. all 4 components of u
+### ---------------------------------------------------------------------------------------------------------
+# Plotting the solutions i.e. all 4 components of u
 fig, ax = plt.subplots(2, 2)
 
-ax[0, 0].plot(t, w1)
+ax[0, 0].plot(t, w1, color = "magenta")
 ax[0, 0].set_xlabel("Time (s)")
-ax[0, 0].set_title("w1")
+ax[0, 0].set_title(r"$\omega_1$")
 ax[0, 0].grid()
     
-ax[0, 1].plot(t, w2)
+ax[0, 1].plot(t, w2, color = "magenta")
 ax[0, 1].set_xlabel("Time (s)")
-ax[0, 1].set_title("w2")
+ax[0, 1].set_title(r"$\omega_2$")
 ax[0, 1].grid()
     
-ax[1, 0].plot(t, th1)
+ax[1, 0].plot(t, th1, color = "magenta")
 ax[1, 0].set_xlabel("Time (s)")
-ax[1, 0].set_title("theta1")
+ax[1, 0].set_title(r"$\theta_1$")
 ax[1, 0].grid()
     
-ax[1, 1].plot(t, th2)
+ax[1, 1].plot(t, th2, color = "magenta")
 ax[1, 1].set_xlabel("Time (s)")
-ax[1, 1].set_title("theta2")
+ax[1, 1].set_title(r"$\theta_2$")
 ax[1, 1].grid()
 
 fig.tight_layout()
@@ -168,43 +168,54 @@ fig.tight_layout()
 
 figg, axx = plt.subplots(2,2)
 
-axx[0, 0].plot(t, w11)
+axx[0, 0].plot(t, w11, color = "cyan")
 axx[0, 0].set_xlabel("Time (s)")
-axx[0, 0].set_title("w11")
+axx[0, 0].set_title(r"$\omega_11$")
 axx[0, 0].grid()
 
-axx[0, 1].plot(t, w22)
+axx[0, 1].plot(t, w22, color = "cyan")
 axx[0, 1].set_xlabel("Time (s)")
-axx[0, 1].set_title("w22")
+axx[0, 1].set_title(r"$\omega_22$")
 axx[0, 1].grid()
 
-axx[1, 0].plot(t, th11)
+axx[1, 0].plot(t, th11, color = "cyan")
 axx[1, 0].set_xlabel("Time (s)")
-axx[1, 0].set_title("th11")
+axx[1, 0].set_title(r"$\theta_11$")
 axx[1, 0].grid()
 
-axx[1, 1].plot(t, th22)
+axx[1, 1].plot(t, th22, color = "cyan")
 axx[1, 1].set_xlabel("Time (s)")
-axx[1, 1].set_title("th22")
+axx[1, 1].set_title(r"$\theta_22$")
 axx[1, 1].grid()
 
 figg.tight_layout()
 #figg.savefig("angles2_and_velocities2.png")
 
-# Brownian Motion plot (th1 vs th2)
-plt.figure()
-plt.plot(th1, th2, label = "Pendulum 1")  # brownian motion (theta1 vs theta2)
-plt.plot(th11, th22, label = "Pendulum 2")
-plt.plot(th111, th222, label = "Pendulum 3")
-plt.plot(th1111, th2222, label = "Pendulum 4")
-plt.suptitle("Brownian motion of the double pendulum")
-plt.xlabel("Theta 1")
-plt.ylabel("Theta 2")
-plt.legend()
-plt.grid()
-#plt.savefig("four_brownian_motion.png")
+### Brownian Motion plot (th1 vs th2) ###
+thetawrap1 = (th1 + np.pi) % (2*np.pi) - np.pi
+thetawrap11 = (th11 + np.pi) % (2*np.pi) - np.pi
+thetawrap111 = (th111 + np.pi) % (2*np.pi) - np.pi
+thetawrap1111 = (th1111 + np.pi) % (2*np.pi) - np.pi
+thetawrap2 = (th2 + np.pi) % (2*np.pi) - np.pi
+thetawrap22 = (th22 + np.pi) % (2*np.pi) - np.pi
+thetawrap222 = (th222 + np.pi) % (2*np.pi) - np.pi
+thetawrap2222 = (th2222 + np.pi) % (2*np.pi) - np.pi
+fig, ax = plt.subplots()
+ax.plot(thetawrap1, thetawrap2, label = "Pendulum 1", color = "magenta")
+ax.plot(thetawrap11, thetawrap22, label = "Pendulum 2", color = "cyan")
+ax.plot(thetawrap111, thetawrap222, label = "Pendulum 3", color = "gold")
+ax.plot(thetawrap1111, thetawrap2222, label = "Pendulum 4", color = "grey")
+ax.set_title("Brownian motion of the double pendulum")
+ax.set_xlabel(r"$\theta_1$")
+ax.set_ylabel(r"$\theta_2$")
+ax.set_xlim(-np.pi, np.pi)
+ax.set_ylim(-np.pi, np.pi)
+ax.set_aspect('equal')
+ax.legend()
+ax.grid()
+#fig.savefig("four_brownian_motion.png")
 
-"""
+
 ### Positions in cartesian coordinates ---------------------------------------------------------------------
 
 def cartesian(tha, thb, la, lb):
