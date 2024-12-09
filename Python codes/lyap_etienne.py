@@ -93,7 +93,7 @@ def lyapunov(u, dx):
     norm = np.linalg.norm(dxf)
     lyapf = np.log(norm/np.linalg.norm(dx))*1/N # Lyapunov exponent of the 20th timestep
     return lyapf, dxf
-
+"""
 # SPIN-UP
 t_max = 100
 N = 100
@@ -126,7 +126,7 @@ print()
 print(eigenvalue)
 print(f"lyap[-1] = {lyap[-1]}")
 print()
-
+"""
 
 #-------------------------------------------
 ### Theta-theta initial conditions ###
@@ -151,3 +151,57 @@ plt.xlabel("Theta (rad)")
 plt.legend()
 plt.grid()
 plt.show()
+
+#-------------------------------------------
+
+dx0 = np.array([0, 0, 1, 0])
+dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
+### Theta-0 initial conditions ###
+th = np.linspace(0,np.pi,30) # Angle array
+lya_th = np.zeros(30) # "Lyapunov for each angle" array
+
+for p in range(30):
+    u0 = np.array([0, 0, th[p], 0])
+    lya = np.zeros(50)
+    for i in range(50):
+        t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
+        lya[i], dx = lyapunov(u0, dx0)
+        u0 = u1 # updating initial conditions
+        dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
+    lya_th[p] = np.average(lya)
+
+plt.figure()
+plt.plot(th, lya_th, label = "Lyapunov exponent average")
+plt.suptitle("Theta-0 initial conditions")
+plt.ylabel("Lyapunov")
+plt.xlabel("Theta (rad)")
+plt.legend()
+plt.grid()
+plt.show()
+
+#-------------------------------------------
+dx0 = np.array([0, 0, 1, 0])
+dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
+### 0-Theta initial conditions ###
+th = np.linspace(0,np.pi,30) # Angle array
+lya_th = np.zeros(30) # "Lyapunov for each angle" array
+
+for p in range(30):
+    u0 = np.array([0, 0, 0, th[p]])
+    lya = np.zeros(50)
+    for i in range(50):
+        t1, u1 = solve_RK4(F_MIT, u0, h, t_max) # updating th1, th2, w1, w2
+        lya[i], dx = lyapunov(u0, dx0)
+        u0 = u1 # updating initial conditions
+        dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
+    lya_th[p] = np.average(lya)
+
+plt.figure()
+plt.plot(th, lya_th, label = "Lyapunov exponent average")
+plt.suptitle("0-Theta initial conditions")
+plt.ylabel("Lyapunov")
+plt.xlabel("Theta (rad)")
+plt.legend()
+plt.grid()
+plt.show()
+
