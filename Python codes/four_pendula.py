@@ -137,7 +137,7 @@ plt.xlabel("Time [s]")
 plt.ylabel("E(t=0) - E(t) [J]")
 plt.legend()
 plt.grid()
-#plt.savefig("four_total_energy_loss.png")
+plt.savefig("four_total_energy_loss.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 # Plotting the solutions i.e. all 4 components of u
