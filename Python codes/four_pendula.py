@@ -170,17 +170,17 @@ figg, axx = plt.subplots(2,2)
 
 axx[0, 0].plot(t, w11, color = "cyan")
 axx[0, 0].set_xlabel("Time (s)")
-axx[0, 0].set_title(r"$\omega_11$")
+axx[0, 0].set_title(r"$\omega_{11}$")
 axx[0, 0].grid()
 
 axx[0, 1].plot(t, w22, color = "cyan")
 axx[0, 1].set_xlabel("Time (s)")
-axx[0, 1].set_title(r"$\omega_22$")
+axx[0, 1].set_title(r"$\omega_{22}$")
 axx[0, 1].grid()
 
 axx[1, 0].plot(t, th11, color = "cyan")
 axx[1, 0].set_xlabel("Time (s)")
-axx[1, 0].set_title(r"$\theta_11$")
+axx[1, 0].set_title(r"$\theta_{11}$")
 axx[1, 0].grid()
 
 axx[1, 1].plot(t, th22, color = "cyan")
