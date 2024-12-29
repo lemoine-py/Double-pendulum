@@ -1,11 +1,5 @@
-# Project Finite Differences: __The DOUBLE PENDULUM__
+# Finite Differences Project : __The DOUBLE PENDULUM__
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lemoine-py/Double-pendulum/HEAD)
-
-> Caution : Binder can take some time (3 min <) to open.
->
-> Caution2 : Basic libraries are not recognised by JupyterLab, resulting in the code unable to be executed within the Binder. To execute the code, please open the <.ipynb> file elsewhere.
->
 > This README file is temporary.
 
 ## Description of the problem

@@ -1,6 +1,15 @@
 """ 
 This code aims to compare four pendula 
-with different initial conditions and plot the results. 
+with different initial conditions and plot the results.
+
+This code produces 6 files : 
+1. <angles1_velocities1.png>
+2. <angles2_velocities2.png>
+3. <four_brownian_motion.png>
+4. <four_total_energy_loss.png>
+5. <four_XY_paths/png>
+6. <four_pendula.gif> : animation of the four pendula's movements (20 seconds)
+
 """
 
 # Libraries
@@ -137,7 +146,7 @@ plt.xlabel("Time [s]")
 plt.ylabel("E(t=0) - E(t) [J]")
 plt.legend()
 plt.grid()
-plt.savefig("four_total_energy_loss.png")
+#plt.savefig("four_total_energy_loss.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 # Plotting the solutions i.e. all 4 components of u
@@ -164,32 +173,32 @@ ax[1, 1].set_title(r"$\theta_2$")
 ax[1, 1].grid()
 
 fig.tight_layout()
-#fig.savefig("angles1_and_velocities1.png")
+fig.savefig("angles1_velocities1.png")
 
 figg, axx = plt.subplots(2,2)
 
-axx[0, 0].plot(t, w11, color = "cyan")
+axx[0, 0].plot(t, w1111, color = "grey")
 axx[0, 0].set_xlabel("Time (s)")
 axx[0, 0].set_title(r"$\omega_{11}$")
 axx[0, 0].grid()
 
-axx[0, 1].plot(t, w22, color = "cyan")
+axx[0, 1].plot(t, w2222, color = "grey")
 axx[0, 1].set_xlabel("Time (s)")
 axx[0, 1].set_title(r"$\omega_{22}$")
 axx[0, 1].grid()
 
-axx[1, 0].plot(t, th11, color = "cyan")
+axx[1, 0].plot(t, th1111, color = "grey")
 axx[1, 0].set_xlabel("Time (s)")
 axx[1, 0].set_title(r"$\theta_{11}$")
 axx[1, 0].grid()
 
-axx[1, 1].plot(t, th22, color = "cyan")
+axx[1, 1].plot(t, th2222, color = "grey")
 axx[1, 1].set_xlabel("Time (s)")
-axx[1, 1].set_title(r"$\theta_22$")
+axx[1, 1].set_title(r"$\theta_{22}$")
 axx[1, 1].grid()
 
 figg.tight_layout()
-#figg.savefig("angles2_and_velocities2.png")
+figg.savefig("angles2_velocities2.png")
 
 ### Brownian Motion plot (th1 vs th2) ###
 fig, ax = plt.subplots()
@@ -197,12 +206,13 @@ ax.plot(th1, th2, label = "Pendulum 1", color = "magenta")
 ax.plot(th11, th22, label = "Pendulum 2", color = "cyan")
 ax.plot(th111, th222, label = "Pendulum 3", color = "gold")
 ax.plot(th1111, th2222, label = "Pendulum 4", color = "grey")
+ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
 ax.set_title("Brownian motion of the double pendulum")
 ax.set_xlabel(r"$\theta_1$")
 ax.set_ylabel(r"$\theta_2$")
 ax.legend()
 ax.grid()
-#fig.savefig("four_brownian_motion.png")
+fig.savefig("four_brownian_motion.png")
 
 
 ### Positions in cartesian coordinates ---------------------------------------------------------------------
@@ -229,35 +239,39 @@ x1111, y1111, x2222, y2222 = cartesian(th1111, th2222, l1, l2)
 # Plot the paths of the pendula
 figa, axa = plt.subplots(2,2)
 axa[0,0].plot(x1, y1, label="m1")
-axa[0,0].plot(x2, y2, label="m2")
+axa[0,0].plot(x2, y2, label="m2", color = "magenta")
 axa[0,0].set_xlabel("x")
 axa[0,0].set_ylabel("y")
 axa[0,0].set_title("Pendulum 1")
 axa[0,0].legend()
+axa[0,0].set_aspect('equal')
 
 axa[0,1].plot(x11, y11, label="m1")
-axa[0,1].plot(x22, y22, label="m2")
+axa[0,1].plot(x22, y22, label="m2", color = "cyan")
 axa[0,1].set_xlabel("x")
 axa[0,1].set_ylabel("y")
 axa[0,1].set_title("Pendulum 2")
 axa[0,1].legend()
+axa[0,1].set_aspect('equal')
 
 axa[1,0].plot(x111, y111, label="m1")
-axa[1,0].plot(x222, y222, label="m2")
+axa[1,0].plot(x222, y222, label="m2", color = "gold")
 axa[1,0].set_xlabel("x")
 axa[1,0].set_ylabel("y")
 axa[1,0].set_title("Pendulum 3")
 axa[1,0].legend()
+axa[1,0].set_aspect('equal')
 
 axa[1,1].plot(x1111, y1111, label="m1")
-axa[1,1].plot(x2222, y2222, label="m2")
+axa[1,1].plot(x2222, y2222, label="m2", color = "grey")
 axa[1,1].set_xlabel("x")
 axa[1,1].set_ylabel("y")
 axa[1,1].set_title("Pendulum 4")
 axa[1,1].legend()
+axa[1,1].set_aspect('equal')
 
 figa.tight_layout()
-#figa.savefig("four_XY_paths.png")
+figa.savefig("four_XY_paths.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
@@ -268,23 +282,23 @@ fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
 ax.set_xlim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
-ax.plot(0, 0, 'o', color = "green")  # Point fixe (origine)
+#ax.plot(0, 0, 'o', color = "green")  # Point fixe (origine)
 
 # Initialization of the pendula
 ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
 ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
-ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="yellow", label="Pendulum 3")
+ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="gold", label="Pendulum 3") 
 ln4, = ax.plot([], [], 'o-', lw=3, markersize=8, color="white", label="Pendulum 4")
 ax.legend()
 
 def animate(i):
-    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendule 1
-    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendule 2
-    ln3.set_data([0, x111[i], x222[i]], [0, y111[i], y222[i]])  # Pendule 3
-    ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendule 4
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendulum 1
+    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendulum 2
+    ln3.set_data([0, x111[i], x222[i]], [0, y111[i], y222[i]])  # Pendulum 3
+    ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendulum 4
     return ln1, ln2
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
-#ani.save('pen.gif', writer='pillow', fps=1/h)
+ani.save('four_pendula.gif', writer='pillow', fps=1/h)
 
 plt.show()
