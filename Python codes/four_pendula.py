@@ -1,14 +1,15 @@
 """ 
-This code aims to compare four pendula 
-with different initial conditions and plot the results.
+This code aims to compare four pendula with different initial conditions.
+It simulates the dynamics of four double pendulum systems and plots the results.
 
 This code produces 6 files : 
-1. <angles1_velocities1.png>
-2. <angles2_velocities2.png>
-3. <four_brownian_motion.png>
-4. <four_total_energy_loss.png>
-5. <four_XY_paths/png>
-6. <four_pendula.gif> : animation of the four pendula's movements (20 seconds)
+
+1. <angles1_velocities1.png> : four subplots for each angles and angular velocities with respect to time
+2. <angles2_velocities2.png> : same as 1. but for another double pendulum
+3. <four_brownian_motion.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
+4. <four_energy_loss.png> : total energy losses due to the numerical model's inaccuracy
+5. <four_XY_paths.png> : four subplots of 2D-cartesian trajectories for each double pendulum
+6. <four_pendula.gif> : animation of the four pendulums' movements (20 seconds)
 
 """
 
@@ -16,13 +17,6 @@ This code produces 6 files :
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
-"""
-from Initialize_planet import Initialize, planet
-
-# Lets the user choose the parameters and initial conditions by a series of prompts
-g, l1, l2, m1, m2, th1_0, th2_0, w1_0, w2_0 = Initialize(planet)
-"""
 
 # Parameters
 l1 = 1
@@ -121,6 +115,7 @@ w2222 = u1111[:,1]
 ### Energy calculations ### --------------------------------------------------------------------------------
 
 def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
+    """ Computes the total energy of the double pendulum for given parameters """
     T = np.zeros(N) # kinetic energy
     V = np.zeros(N) # potential energy
     E = np.zeros(N) # total energy
@@ -137,7 +132,7 @@ T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
 
 # Plotting the difference between the initial total energy and the computed total energy along time
 plt.figure()
-plt.plot(t, E1[0]-E1, label = "Pendulum 1", color = "magenta") # total energy vs time
+plt.plot(t, E1[0]-E1, label = "Pendulum 1", color = "magenta")
 plt.plot(t, E2[0]-E2, label = "Pendulum 2", color = "cyan")
 plt.plot(t, E3[0]-E3, label = "Pendulum 3", color = "gold")
 plt.plot(t, E4[0]-E4, label = "Pendulum 4", color = "gray")
@@ -146,7 +141,7 @@ plt.xlabel("Time [s]")
 plt.ylabel("E(t=0) - E(t) [J]")
 plt.legend()
 plt.grid()
-#plt.savefig("four_total_energy_loss.png")
+#plt.savefig("four_energy_loss.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 # Plotting the solutions i.e. all 4 components of u
@@ -218,6 +213,7 @@ fig.savefig("four_brownian_motion.png")
 ### Positions in cartesian coordinates ---------------------------------------------------------------------
 
 def cartesian(tha, thb, la, lb):
+    """ Computes the cartesian coordinates for both masses """
     xa = np.zeros(N) # x component of m1
     ya = np.zeros(N) # y component of m1
 
@@ -276,15 +272,15 @@ figa.savefig("four_XY_paths.png")
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
 
-### ANIMATION GIF
+### ANIMATION GIF ###
 
 fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
 ax.set_xlim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
-#ax.plot(0, 0, 'o', color = "green")  # Point fixe (origine)
+#ax.plot(0, 0, 'o', color = "green")  # Origin
 
-# Initialization of the pendula
+# Initialization of the pendulums
 ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
 ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
 ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="gold", label="Pendulum 3") 

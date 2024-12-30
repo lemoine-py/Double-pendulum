@@ -1,5 +1,10 @@
 
-""" Module that initializes all the parameters of the double pendulum model """
+""" 
+This module prompts the user on the terminal to enter the value for each parameters of the double pendulum model.
+
+Its <planet> function was made as a joke, and is actually fun, for it can initialize the double pendulum model
+with the gravitational acceleration set for different planets of the solar system.
+"""
 
 def Initialize(planet):
     print("")

@@ -1,3 +1,7 @@
+"""
+This code only exists because of one particular coder's particular way of working, who will recognize himself.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation

@@ -1,4 +1,6 @@
-""" This python code computes the Jacobian of the system of differential equations of the double pendulum. """
+""" 
+This python code computes the Jacobian of the double pendulum's system of differential equations. 
+"""
 
 from sympy import symbols, sin, cos, diff
 
