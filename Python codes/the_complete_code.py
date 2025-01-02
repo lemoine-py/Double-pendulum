@@ -70,17 +70,17 @@ def solve_RK4(f, u0, h):
         k3 = h * f(u[i][0] + k2[0]/2, u[i][1] + k2[1]/2, u[i][2] + k2[2]/2, u[i][3] + k2[3]/2)
         k4 = h * f(u[i][0] + k3[0], u[i][1] + k3[1], u[i][2] + k3[2], u[i][3] + k3[3])
         u[i+1] = u[i] + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
-    return t, u
+    return u
 
-### Solving the differential equation and storing the solutions in u1
-t, u = solve_RK4(F_deriv, u0, h)
+### Storing the solutions in u
+u = solve_RK4(F_deriv, u0, h)
 
 th1 = u[:,2] 
 th2 = u[:,3]
 w1 = u[:,0]
 w2 = u[:,1]
 
-# Plotting the solutions i.e. all 4 components of u
+### Plotting the solutions i.e. all 4 components of u ### -----------------------------------------------
 fig, ax = plt.subplots(2, 2)
 
 ax[0, 0].plot(t, w1)
@@ -111,7 +111,7 @@ fig.tight_layout()
 fig.savefig("angles_velocities.png")
 
 
-# Brownian motion plot (theta1 vs theta2)
+### Brownian motion plot (theta1 vs theta2) ### ---------------------------------------------------------
 fig, ax = plt.subplots()
 ax.plot(th1, th2)
 ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
@@ -123,7 +123,7 @@ ax.grid()
 fig.savefig("one_brownian_motion.png")
 
 
-### Energy calculations
+### Energy calculations ### ---------------------------------------------------------------------------
 def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
     """ Computes the total energy of the double pendulum for given parameters """
     T = np.zeros(N) # kinetic energy
@@ -147,7 +147,7 @@ plt.grid()
 plt.savefig("one_energy_loss.png")
 
 
-### Position in cartesian coordinates
+### Position in cartesian coordinates ### --------------------------------------------------------------
 def cartesian(tha, thb, la, lb):
     """ Computes the cartesian coordinates in 2D for each mass """
     xa = np.zeros(N) # x component of m1
@@ -179,7 +179,7 @@ fig.savefig("one_XY_paths.png")
 
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
-### ANIMATION ###
+### ANIMATION ### ---------------------------------------------------------------------------------------
 def animate(i):
     ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])
 

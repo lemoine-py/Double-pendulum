@@ -1,9 +1,20 @@
 
 """ 
-This module prompts the user on the terminal to enter the value for each parameters of the double pendulum model.
+This module prompts the user on the terminal to enter the value 
+for each parameters of the double pendulum model:
+    - Length l1 of the upper rod (m)
+    - Length l2 of the lower rod (m)
+    - Mass m1 of the upper rod (kg)
+    - Mass m2 of the lower rod (kg)
+    - Initial angle theta_1 of the upper rod (rad)
+    - Initial angle theta_2 of the lower rod (rad)
+    - Initial angular velocity omega_1 of the upper rod (rad/s)
+    - Initial angular velocity omega_2 of the lower rod (rad/s)
 
 Its <planet> function was made as a joke, and is actually fun, for it can initialize the double pendulum model
 with the gravitational acceleration set for different planets of the solar system.
+
+This module is not necessary for the simulation, but it is an interactive way to initialize the model.
 """
 
 def Initialize(planet):
@@ -22,13 +33,13 @@ def Initialize(planet):
     print("")
     m2 = float(input(" - Mass m2 of the lower rod (kg): ... "))
     print("")
-    theta1 = float(input(" - Initial angle theta_1 of the upper rod (degrees): ... "))
+    theta1 = float(input(" - Initial angle theta_1 of the upper rod (rad): ... "))
     print("")
-    theta2 = float(input(" - Initial angle theta_2 of the lower rod (degrees): ... "))
+    theta2 = float(input(" - Initial angle theta_2 of the lower rod (rad): ... "))
     print("")
-    omega1 = float(input(" - Initial angular velocity omega_1 of the upper rod (m/s): ... "))
+    omega1 = float(input(" - Initial angular velocity omega_1 of the upper rod (rad/s): ... "))
     print("")
-    omega2 = float(input(" - Initial angular velocity omega_2 of the lower rod (m/s): ... "))
+    omega2 = float(input(" - Initial angular velocity omega_2 of the lower rod (rad/s): ... "))
     print("")
     return g, l1, l2, m1, m2, theta1, theta2, omega1, omega2
 

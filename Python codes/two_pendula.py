@@ -60,7 +60,7 @@ th11_0 = thetas[1]
 th22_0 = thetas[1]
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
 
-### Defining functions to solve the differential equation
+### Defining functions to solve the differential equation ### -----------------------------------------------
 def F_deriv(w1, w2, th1, th2): 
     """ Derivatives of the u array """
 
@@ -87,23 +87,22 @@ def solve_RK4(f, u0, h):
         u[i+1] = u[i] + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     return u
 
-### Solving the differential equation and storing the solutions in u1
+### Storing the solutions in u1 and u11 ### -----------------------------------------------------------------
 u1 = solve_RK4(F_deriv, u0, h)
 u11 = solve_RK4(F_deriv, u00, h)
 
-# Pendulum 1
+# Pendulum A
 th1 = u1[:,2] 
 th2 = u1[:,3]
 w1 = u1[:,0]
 w2 = u1[:,1]
-# Pendulum 2
+# Pendulum B
 th11 = u11[:,2]
 th22 = u11[:,3]
 w11 = u11[:,0]
 w22 = u11[:,1]
 
 ### Energy calculations ### --------------------------------------------------------------------------------
-
 def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
     """ Computes the total energy of the double pendulum for given parameters """
     T = np.zeros(N) # kinetic energy
@@ -156,7 +155,7 @@ ax[1, 1].grid()
 fig.tight_layout()
 fig.savefig("angles1_velocities1.png")
 
-### Brownian Motion plot (th1 vs th2) ###
+### Brownian Motion plot (th1 vs th2) #### -------------------------------------------------------------------
 plt.figure()
 plt.plot(th1, th2, label = "Pendulum A")
 plt.plot(th11, th22, label = "Pendulum B")
@@ -169,8 +168,7 @@ plt.legend()
 plt.grid()
 plt.savefig("two_brownian_motion.png")
 
-### Positions in cartesian coordinates ---------------------------------------------------------------------
-
+### Positions in cartesian coordinates ### ------------------------------------------------------------------
 def cartesian(tha, thb, la, lb):
     """ Computes the cartesian coordinates for both masses """
     xa = np.zeros(N) # x component of m1
@@ -213,13 +211,13 @@ figa.savefig("two_XY_paths.png")
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
 
-### ANIMATION GIF ###
+### ANIMATION GIF ### ---------------------------------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
 ax.set_xlim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
-#ax.plot(0, 0, 'o', color = "green")  # Origin
+ax.plot(0, 0, 'o', color = "white")  # Origin
 
 # Initialization of the pendulums
 ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum A")
@@ -227,11 +225,9 @@ ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum B
 ax.legend()
 
 def animate(i):
-    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendulum 1
-    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendulum 2
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendulum A
+    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendulum B
     return ln1, ln2
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
-ani.save('two_pendula.gif', writer='pillow', fps=1/h)
-
-plt.show()
+ani.save('two_pendula.gif', writer='pillow', fps=1/h)  # Save the animation as a gif

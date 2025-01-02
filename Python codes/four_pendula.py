@@ -32,16 +32,13 @@ N = int(np.floor(t_max/h))+1
 t = np.linspace(0, t_max, N)
 
 ### Initial conditions
-
 # Initial angles templates
 critical = 1.4 # near critical angle
 high = np.pi+0.1 # high energy
 low = 0.1 # low energy
-
 # Angle offset
 big = 0.1
 small = 0.001
-
 # Choosing between templates
 angle = high #change at will
 delta = big #change at will
@@ -99,7 +96,7 @@ def solve_RK4(f, u0, h):
         u[i+1] = u[i] + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     return u
 
-### Solving the differential equation and storing the solutions in u1
+### Storing the solutions in arrays u1, u11, u111, u1111
 u1 = solve_RK4(F_deriv, u0, h)
 u11 = solve_RK4(F_deriv, u00, h)
 u111 = solve_RK4(F_deriv, u000, h)
@@ -125,37 +122,6 @@ th1111 = u1111[:,2]
 th2222 = u1111[:,3]
 w1111 = u1111[:,0]
 w2222 = u1111[:,1]
-
-### Energy calculations ### --------------------------------------------------------------------------------
-
-def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
-    """ Computes the total energy of the double pendulum for given parameters """
-    T = np.zeros(N) # kinetic energy
-    V = np.zeros(N) # potential energy
-    E = np.zeros(N) # total energy
-    for i in range(N):
-        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) 
-        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) 
-        E[i] = T[i] + V[i] 
-    return T, V, E
-
-T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2)
-T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22)
-T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222)
-T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
-
-# Plotting the difference between the initial total energy and the computed total energy along time
-plt.figure()
-plt.plot(t, E1[0]-E1, label = "Pendulum A", color = "magenta")
-plt.plot(t, E2[0]-E2, label = "Pendulum B", color = "cyan")
-plt.plot(t, E3[0]-E3, label = "Pendulum C", color = "gold")
-plt.plot(t, E4[0]-E4, label = "Pendulum D", color = "gray")
-plt.suptitle("Total energy losses due to RK4 inacurracy")
-plt.xlabel("Time [s]")
-plt.ylabel("E(t=0) - E(t) [J]")
-plt.legend()
-plt.grid()
-plt.savefig("four_energy_loss.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 # Plotting the solutions i.e. all 4 components of u
@@ -213,7 +179,38 @@ axx[1, 1].grid()
 figg.tight_layout()
 figg.savefig("angles2_velocities2.png")
 
-### Brownian Motion plot (th1 vs th2) ###
+### Energy calculations ### --------------------------------------------------------------------------------
+
+def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
+    """ Computes the total energy of the double pendulum for given parameters """
+    T = np.zeros(N) # kinetic energy
+    V = np.zeros(N) # potential energy
+    E = np.zeros(N) # total energy
+    for i in range(N):
+        T[i] = 0.5*m1*l1**2*w1[i]**2 + 0.5*m2*(l1**2*w1[i]**2 + l2**2*w2[i]**2 + 2*l1*l2*w1[i]*w2[i]*np.cos(th1[i]-th2[i])) 
+        V[i] = -(m1 + m2)*g*l1*np.cos(th1[i]) - m2*g*l2*np.cos(th2[i]) 
+        E[i] = T[i] + V[i] 
+    return T, V, E
+
+T1, V1, E1 = energy(m1, m2, l1, l2, g, w1, w2, th1, th2)
+T2, V2, E2 = energy(m1, m2, l1, l2, g, w11, w22, th11, th22)
+T3, V3, E3 = energy(m1, m2, l1, l2, g, w111, w222, th111, th222)
+T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
+
+# Plotting the difference between the initial total energy and the computed total energy along time
+plt.figure()
+plt.plot(t, E1[0]-E1, label = "Pendulum A", color = "magenta")
+plt.plot(t, E2[0]-E2, label = "Pendulum B", color = "cyan")
+plt.plot(t, E3[0]-E3, label = "Pendulum C", color = "gold")
+plt.plot(t, E4[0]-E4, label = "Pendulum D", color = "gray")
+plt.suptitle("Total energy losses due to RK4 inacurracy")
+plt.xlabel("Time [s]")
+plt.ylabel("E(t=0) - E(t) [J]")
+plt.legend()
+plt.grid()
+plt.savefig("four_energy_loss.png")
+
+### Brownian Motion plot (th1 vs th2) ### -------------------------------------------------------------------
 fig, ax = plt.subplots()
 ax.plot(th1, th2, label = "Pendulum A", color = "magenta")
 ax.plot(th11, th22, label = "Pendulum B", color = "cyan")
@@ -228,7 +225,7 @@ ax.grid()
 fig.savefig("four_brownian_motion.png")
 
 
-### Positions in cartesian coordinates ---------------------------------------------------------------------
+### Positions in cartesian coordinates ### -------------------------------------------------------------------
 
 def cartesian(tha, thb, la, lb):
     """ Computes the cartesian coordinates for both masses """
@@ -290,7 +287,7 @@ figa.savefig("four_XY_paths.png")
 plt.show() # Shows at once every plot that has been produced before (in multiple windows)
 
 
-### ANIMATION GIF ###
+### ANIMATION GIF ### ---------------------------------------------------------------------------------------
 
 fig, ax = plt.subplots(figsize=(3 * (l1 + l2), 3 * (l1 + l2)))
 ax.set_facecolor('k')
@@ -313,6 +310,4 @@ def animate(i):
     return ln1, ln2
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
-ani.save('four_pendula.gif', writer='pillow', fps=1/h)
-
-plt.show()
+ani.save('four_pendula.gif', writer='pillow', fps=1/h) # Save the animation as a gif
