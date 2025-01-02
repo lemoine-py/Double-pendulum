@@ -34,9 +34,9 @@ t = np.linspace(0, t_max, N)
 ### Initial conditions
 
 # Initial angles templates
-critical = 1.4
-high = np.pi
-small = 0.1
+critical = 1.4 # near critical angle
+high = np.pi+0.1 # high energy
+low = 0.1 # low energy
 
 # Angle offset
 big = 0.1

@@ -1,22 +1,26 @@
-""" This code aims to compute the Lyapunov exponents of the doubel pendulum system """
+""" 
+This code aims to compute the Lyapunov exponents of the double pendulum system
+"""
 
 import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 
+# Parameters
 m1 = 1
 m2 = 1
 l1 = 1
 l2 = 1
 g = 9.81
 
+# Time parameters and discretization
 t_max = 20
 h = 0.01 # Not smaller than that for the gif
 N = int(np.floor(t_max/h))+1
 
+# Initial conditions
 w1_0 = 0
 w2_0 = 0
-
 th1_0 = 1.5
 th2_0 = 0
 
@@ -25,7 +29,7 @@ dx0 = np.random.rand(4)
 dx0 = dx0/(np.linalg.norm(dx0)*10**10)
 u0d = u0 + dx0
 
-def F_MIT(w1, w2, th1, th2): # MIT version of the derivative
+def F_deriv(w1, w2, th1, th2):
     num1 = -g*(2*m1+m2)*np.sin(th1)-m2*g*np.sin(th1-2*th2)-2*np.sin(th1-th2)*m2*(w2**2*l2+w1**2*l1*np.cos(th1-th2))
     denom1 = l1*(2*m1+m2-m2*np.cos(2*th1-2*th2))
     
@@ -51,10 +55,8 @@ def solve_RK4(f, u0, h, t_max):
         u = u + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     return t, u
 
-#t, u = solve_RK4(big_F, u0, h, t_max)
-
-t1, u1 = solve_RK4(F_MIT, u0, h, t_max)
-t2, u1d = solve_RK4(F_MIT, u0d, h, t_max)
+t1, u1 = solve_RK4(F_deriv, u0, h, t_max)
+t2, u1d = solve_RK4(F_deriv, u0d, h, t_max)
 """
 th1 = u1[:,2] 
 th2 = u1[:,3]
@@ -99,7 +101,7 @@ for p in range(30):
     u0 = np.array([0, 0, th[p], th[p]])
     lya = np.zeros(50)
     for i in range(50):
-        t1, u1 = solve_RK4(F_MIT, u0, h, t_max)
+        t1, u1 = solve_RK4(F_deriv, u0, h, t_max)
         lya[i], dx = lyapunov(u0, dx0)
         u0 = u1
         dx0 = dx/(np.linalg.norm(dx)*10**10)
@@ -131,7 +133,7 @@ for i in range(N):
 plt.plot(t,lyap)
 plt.show()
 
-# Verifying with theoretical values of lyapunov_max #
+# Verifying with theoretical values of lyapunov_max
 eigenvalue, eigenvector = np.linalg.eig(M)
 print()
 print(eigenvalue)
