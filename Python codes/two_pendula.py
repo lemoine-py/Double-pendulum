@@ -1,15 +1,15 @@
 """ 
 This code aims to compare four pendula with different initial conditions.
-It simulates the dynamics of two double pendulum systems and plots the results.
+It simulates the dynamics of *two* double pendulum systems and plots the results.
 
-This code produces 6 files : 
+Running this code produces 6 files : 
 
 1. <angles1_velocities1.png> : four subplots for each angles and angular velocities with respect to time
 2. <angles2_velocities2.png> : same as 1. but for another double pendulum
 3. <four_brownian_motion.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
 4. <four_energy_loss.png> : total energy losses due to the numerical model's inaccuracy
-5. <four_XY_paths.png> : four subplots of 2D-cartesian trajectories for each double pendulum
-6. <four_pendula.gif> : animation of the four pendulums' movements (20 seconds)
+5. <four_XY_paths.png> : two subplots of 2D-cartesian trajectories for each double pendulum
+6. <four_pendula.gif> : animation of the four pendula's movements (20 seconds)
 
 """
 
@@ -33,17 +33,31 @@ t = np.linspace(0, t_max, N)
 
 ### Initial conditions
 
-# Pendulum 1
+# Initial angles templates
+critical = 1.4
+high = np.pi
+small = 0.1
+
+# Angle offset
+big = 0.1
+small = 0.001
+
+# Choosing between templates
+angle = high #change at will
+delta = big #change at will
+thetas = [angle + i*delta for i in range(2)]
+
+# Pendulum A
 w1_0 = 0
 w2_0 = 0
-th1_0 = np.pi
-th2_0 = 1.4
+th1_0 = thetas[0]
+th2_0 = thetas[0]
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-# Pendulum 2
+# Pendulum B
 w11_0 = 0
 w22_0 = 0
-th11_0 = np.pi
-th22_0 = 1.5
+th11_0 = thetas[1]
+th22_0 = thetas[1]
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
 
 ### Defining functions to solve the differential equation
@@ -61,7 +75,7 @@ def F_deriv(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
 
-def solve_RK4(f, u0, h, t):
+def solve_RK4(f, u0, h):
     """ Solves the differential equation using the Runge-Kutta 4th order method """
     u = np.zeros((N,4))
     u[0] = u0
@@ -74,8 +88,8 @@ def solve_RK4(f, u0, h, t):
     return u
 
 ### Solving the differential equation and storing the solutions in u1
-u1 = solve_RK4(F_deriv, u0, h, t)
-u11 = solve_RK4(F_deriv, u00, h, t)
+u1 = solve_RK4(F_deriv, u0, h)
+u11 = solve_RK4(F_deriv, u00, h)
 
 # Pendulum 1
 th1 = u1[:,2] 
@@ -143,19 +157,17 @@ fig.tight_layout()
 fig.savefig("angles1_velocities1.png")
 
 ### Brownian Motion plot (th1 vs th2) ###
-fig, ax = plt.subplots()
-ax.plot(th1, th2, label = "Pendulum A")
-ax.plot(th11, th22, label = "Pendulum B")
-ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
-ax.set_title(r"Parametric plot - $\theta_1$ vs $\theta_2$")
-ax.set_xlabel(r"$\theta_1$")
-ax.set_ylabel(r"$\theta_2$")
-ax.set_xlim(-20, 10)
-ax.set_aspect('equal')
-ax.legend()
-ax.grid()
-fig.savefig("two_brownian_motion.png")
-
+plt.figure()
+plt.plot(th1, th2, label = "Pendulum A")
+plt.plot(th11, th22, label = "Pendulum B")
+plt.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
+plt.suptitle(r"Parametric plot - $\theta_1$ vs $\theta_2$")
+plt.xlabel(r"$\theta_1$")
+plt.ylabel(r"$\theta_2$")
+plt.xlim(-20, 10)
+plt.legend()
+plt.grid()
+plt.savefig("two_brownian_motion.png")
 
 ### Positions in cartesian coordinates ---------------------------------------------------------------------
 

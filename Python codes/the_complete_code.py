@@ -2,8 +2,6 @@
 This code is the main complete code for the Double Pendulum project.
 By "complete", we mean that this code is self-sufficient and can be run as is.
 
-For clarity, the repository is divided into several modules, that are copy-pasted here.
-
 This code simulates the dynamics of one double pendulum system 
 and produces 5 files:
 
@@ -30,12 +28,13 @@ g = 9.81
 t_max = 20
 h = 0.02 # Not smaller than that for the gif
 N = int(np.floor(t_max/h))+1
+t = np.linspace(0, t_max, N)
 
 # Initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 1.4
-th2_0 = 1.4
+th1_0 = np.pi
+th2_0 = np.pi
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
 """
@@ -60,11 +59,9 @@ def F_deriv(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
 
-def solve_RK4(f, u0, h, t_max):
+def solve_RK4(f, u0, h):
     """ Solves the differential equation using the Runge-Kutta 4th order method """
 
-    N = int(np.floor(t_max / h)) + 1 # Redundant definition of the already globally defined N
-    t = np.linspace(0, t_max, N)
     u = np.zeros((N,4))
     u[0] = u0
     for i in range(N - 1):
@@ -76,7 +73,7 @@ def solve_RK4(f, u0, h, t_max):
     return t, u
 
 ### Solving the differential equation and storing the solutions in u1
-t, u = solve_RK4(F_deriv, u0, h, t_max)
+t, u = solve_RK4(F_deriv, u0, h)
 
 th1 = u[:,2] 
 th2 = u[:,3]
@@ -88,21 +85,25 @@ fig, ax = plt.subplots(2, 2)
 
 ax[0, 0].plot(t, w1)
 ax[0, 0].set_xlabel("Time (s)")
+ax[0, 0].set_ylabel("Angular velocity (rad/s)")
 ax[0, 0].set_title(r"$\omega_1$")
 ax[0, 0].grid()
     
 ax[0, 1].plot(t, w2)
 ax[0, 1].set_xlabel("Time (s)")
+ax[0, 1].set_ylabel("Angle (rad)")
 ax[0, 1].set_title(r"$\omega_2$")
 ax[0, 1].grid()
     
 ax[1, 0].plot(t, th1)
 ax[1, 0].set_xlabel("Time (s)")
+ax[1, 0].set_ylabel("Angular velocity (rad/s)")
 ax[1, 0].set_title(r"$\theta_1$")
 ax[1, 0].grid()
     
 ax[1, 1].plot(t, th2)
 ax[1, 1].set_xlabel("Time (s)")
+ax[1, 1].set_ylabel("Angle (rad)")
 ax[1, 1].set_title(r"$\theta_2$")
 ax[1, 1].grid()
 
@@ -114,7 +115,7 @@ fig.savefig("angles_velocities.png")
 fig, ax = plt.subplots()
 ax.plot(th1, th2)
 ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
-ax.set_title("Brownian motion of the double pendulum")
+ax.set_title(r"Parametric plot - $\theta_1$ vs $\theta_2$")
 ax.set_xlabel(r"$\theta_1$")
 ax.set_ylabel(r"$\theta_2$")
 ax.legend()

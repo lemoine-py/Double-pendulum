@@ -33,29 +33,43 @@ t = np.linspace(0, t_max, N)
 
 ### Initial conditions
 
+# Initial angles templates
+critical = 1.4
+high = np.pi
+small = 0.1
+
+# Angle offset
+big = 0.1
+small = 0.001
+
+# Choosing between templates
+angle = high #change at will
+delta = big #change at will
+thetas = [angle + i*delta for i in range(4)]
+
 # Pendulum A
 w1_0 = 0
 w2_0 = 0
-th1_0 = 1.3 + 0.1
-th2_0 = 1.3 + 0.1
+th1_0 = thetas[0]
+th2_0 = thetas[0]
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 # Pendulum B
 w11_0 = 0
 w22_0 = 0
-th11_0 = 1.3 + 0.2
-th22_0 = 1.3 + 0.2
+th11_0 = thetas[1]
+th22_0 = thetas[1]
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
 # Pendulum C
 w111_0 = 0
 w222_0 = 0
-th111_0 = 1.3 + 0.3
-th222_0 = 1.3 + 0.3
+th111_0 = thetas[2]
+th222_0 = thetas[2]
 u000 = np.array([w111_0, w222_0, th111_0, th222_0])
 # Pendulum D
 w1111_0 = 0
 w2222_0 = 0
-th1111_0 = 1.3 + 0.4
-th2222_0 = 1.3 + 0.4
+th1111_0 = thetas[3]
+th2222_0 = thetas[3]
 u0000 = np.array([w1111_0, w2222_0, th1111_0, th2222_0])
 
 ### Defining functions to solve the differential equation
@@ -73,7 +87,7 @@ def F_deriv(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
 
-def solve_RK4(f, u0, h, t):
+def solve_RK4(f, u0, h):
     """ Solves the differential equation using the Runge-Kutta 4th order method """
     u = np.zeros((N,4))
     u[0] = u0
@@ -86,10 +100,10 @@ def solve_RK4(f, u0, h, t):
     return u
 
 ### Solving the differential equation and storing the solutions in u1
-u1 = solve_RK4(F_deriv, u0, h, t)
-u11 = solve_RK4(F_deriv, u00, h, t)
-u111 = solve_RK4(F_deriv, u000, h, t)
-u1111 = solve_RK4(F_deriv, u0000, h, t)
+u1 = solve_RK4(F_deriv, u0, h)
+u11 = solve_RK4(F_deriv, u00, h)
+u111 = solve_RK4(F_deriv, u000, h)
+u1111 = solve_RK4(F_deriv, u0000, h)
 
 # Pendulum A
 th1 = u1[:,2] 
