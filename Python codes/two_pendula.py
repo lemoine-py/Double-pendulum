@@ -144,12 +144,13 @@ fig.savefig("angles1_velocities1.png")
 
 ### Brownian Motion plot (th1 vs th2) ###
 fig, ax = plt.subplots()
-ax.plot(th1, th2, label = "Pendulum 1")
-ax.plot(th11, th22, label = "Pendulum 2")
+ax.plot(th1, th2, label = "Pendulum A")
+ax.plot(th11, th22, label = "Pendulum B")
 ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
-ax.set_title("Parametric plot of the pendulum's angles")
+ax.set_title(r"Parametric plot - $\theta_1$ vs $\theta_2$")
 ax.set_xlabel(r"$\theta_1$")
 ax.set_ylabel(r"$\theta_2$")
+ax.set_xlim(-20, 10)
 ax.set_aspect('equal')
 ax.legend()
 ax.grid()
@@ -182,7 +183,7 @@ axa[0].plot(x1, y1, label="m1")
 axa[0].plot(x2, y2, label="m2", color = "magenta")
 axa[0].set_xlabel("x")
 axa[0].set_ylabel("y")
-axa[0].set_title("Pendulum 1")
+axa[0].set_title("Pendulum A")
 axa[0].legend()
 axa[0].set_aspect('equal')
 
@@ -190,7 +191,7 @@ axa[1].plot(x11, y11, label="m1")
 axa[1].plot(x22, y22, label="m2", color = "cyan")
 axa[1].set_xlabel("x")
 axa[1].set_ylabel("y")
-axa[1].set_title("Pendulum 2")
+axa[1].set_title("Pendulum B")
 axa[1].legend()
 axa[1].set_aspect('equal')
 
@@ -209,8 +210,8 @@ ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 #ax.plot(0, 0, 'o', color = "green")  # Origin
 
 # Initialization of the pendulums
-ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
-ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
+ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum A")
+ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum B")
 ax.legend()
 
 def animate(i):

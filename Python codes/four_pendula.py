@@ -33,25 +33,25 @@ t = np.linspace(0, t_max, N)
 
 ### Initial conditions
 
-# Pendulum 1
+# Pendulum A
 w1_0 = 0
 w2_0 = 0
 th1_0 = 1.3 + 0.1
 th2_0 = 1.3 + 0.1
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-# Pendulum 2
+# Pendulum B
 w11_0 = 0
 w22_0 = 0
 th11_0 = 1.3 + 0.2
 th22_0 = 1.3 + 0.2
 u00 = np.array([w11_0, w22_0, th11_0, th22_0])
-# Pendulum 3
+# Pendulum C
 w111_0 = 0
 w222_0 = 0
 th111_0 = 1.3 + 0.3
 th222_0 = 1.3 + 0.3
 u000 = np.array([w111_0, w222_0, th111_0, th222_0])
-# Pendulum 4
+# Pendulum D
 w1111_0 = 0
 w2222_0 = 0
 th1111_0 = 1.3 + 0.4
@@ -91,22 +91,22 @@ u11 = solve_RK4(F_deriv, u00, h, t)
 u111 = solve_RK4(F_deriv, u000, h, t)
 u1111 = solve_RK4(F_deriv, u0000, h, t)
 
-# Pendulum 1
+# Pendulum A
 th1 = u1[:,2] 
 th2 = u1[:,3]
 w1 = u1[:,0]
 w2 = u1[:,1]
-# Pendulum 2
+# Pendulum B
 th11 = u11[:,2]
 th22 = u11[:,3]
 w11 = u11[:,0]
 w22 = u11[:,1]
-# Pendulum 3
+# Pendulum C
 th111 = u111[:,2]
 th222 = u111[:,3]
 w111 = u111[:,0]
 w222 = u111[:,1]
-# Pendulum 4
+# Pendulum D
 th1111 = u1111[:,2]
 th2222 = u1111[:,3]
 w1111 = u1111[:,0]
@@ -132,16 +132,16 @@ T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
 
 # Plotting the difference between the initial total energy and the computed total energy along time
 plt.figure()
-plt.plot(t, E1[0]-E1, label = "Pendulum 1", color = "magenta")
-plt.plot(t, E2[0]-E2, label = "Pendulum 2", color = "cyan")
-plt.plot(t, E3[0]-E3, label = "Pendulum 3", color = "gold")
-plt.plot(t, E4[0]-E4, label = "Pendulum 4", color = "gray")
+plt.plot(t, E1[0]-E1, label = "Pendulum A", color = "magenta")
+plt.plot(t, E2[0]-E2, label = "Pendulum B", color = "cyan")
+plt.plot(t, E3[0]-E3, label = "Pendulum C", color = "gold")
+plt.plot(t, E4[0]-E4, label = "Pendulum D", color = "gray")
 plt.suptitle("Total energy losses due to RK4 inacurracy")
 plt.xlabel("Time [s]")
 plt.ylabel("E(t=0) - E(t) [J]")
 plt.legend()
 plt.grid()
-#plt.savefig("four_energy_loss.png")
+plt.savefig("four_energy_loss.png")
 
 ### ---------------------------------------------------------------------------------------------------------
 # Plotting the solutions i.e. all 4 components of u
@@ -149,6 +149,7 @@ fig, ax = plt.subplots(2, 2)
 
 ax[0, 0].plot(t, w1, color = "magenta")
 ax[0, 0].set_xlabel("Time (s)")
+ax[0,0].set_ylabel("Angular velocity (rad/s)")
 ax[0, 0].set_title(r"$\omega_1$")
 ax[0, 0].grid()
     
@@ -159,6 +160,7 @@ ax[0, 1].grid()
     
 ax[1, 0].plot(t, th1, color = "magenta")
 ax[1, 0].set_xlabel("Time (s)")
+ax[1,0].set_ylabel("Angle (rad)")
 ax[1, 0].set_title(r"$\theta_1$")
 ax[1, 0].grid()
     
@@ -172,22 +174,24 @@ fig.savefig("angles1_velocities1.png")
 
 figg, axx = plt.subplots(2,2)
 
-axx[0, 0].plot(t, w1111, color = "grey")
+axx[0, 0].plot(t, w1111, color = "red")
 axx[0, 0].set_xlabel("Time (s)")
+axx[0, 0].set_ylabel("Angular velocity (rad/s)")
 axx[0, 0].set_title(r"$\omega_{11}$")
 axx[0, 0].grid()
 
-axx[0, 1].plot(t, w2222, color = "grey")
+axx[0, 1].plot(t, w2222, color = "red")
 axx[0, 1].set_xlabel("Time (s)")
 axx[0, 1].set_title(r"$\omega_{22}$")
 axx[0, 1].grid()
 
-axx[1, 0].plot(t, th1111, color = "grey")
+axx[1, 0].plot(t, th1111, color = "red")
 axx[1, 0].set_xlabel("Time (s)")
+axx[1, 0].set_ylabel("Angle (rad)")
 axx[1, 0].set_title(r"$\theta_{11}$")
 axx[1, 0].grid()
 
-axx[1, 1].plot(t, th2222, color = "grey")
+axx[1, 1].plot(t, th2222, color = "red")
 axx[1, 1].set_xlabel("Time (s)")
 axx[1, 1].set_title(r"$\theta_{22}$")
 axx[1, 1].grid()
@@ -197,10 +201,10 @@ figg.savefig("angles2_velocities2.png")
 
 ### Brownian Motion plot (th1 vs th2) ###
 fig, ax = plt.subplots()
-ax.plot(th1, th2, label = "Pendulum 1", color = "magenta")
-ax.plot(th11, th22, label = "Pendulum 2", color = "cyan")
-ax.plot(th111, th222, label = "Pendulum 3", color = "gold")
-ax.plot(th1111, th2222, label = "Pendulum 4", color = "grey")
+ax.plot(th1, th2, label = "Pendulum A", color = "magenta")
+ax.plot(th11, th22, label = "Pendulum B", color = "cyan")
+ax.plot(th111, th222, label = "Pendulum C", color = "gold")
+ax.plot(th1111, th2222, label = "Pendulum D", color = "grey")
 ax.plot(th1[0], th2[0], "-o", label = "Starting point", color = "red")
 ax.set_title("Brownian motion of the double pendulum")
 ax.set_xlabel(r"$\theta_1$")
@@ -238,7 +242,7 @@ axa[0,0].plot(x1, y1, label="m1")
 axa[0,0].plot(x2, y2, label="m2", color = "magenta")
 axa[0,0].set_xlabel("x")
 axa[0,0].set_ylabel("y")
-axa[0,0].set_title("Pendulum 1")
+axa[0,0].set_title("Pendulum A")
 axa[0,0].legend()
 axa[0,0].set_aspect('equal')
 
@@ -246,7 +250,7 @@ axa[0,1].plot(x11, y11, label="m1")
 axa[0,1].plot(x22, y22, label="m2", color = "cyan")
 axa[0,1].set_xlabel("x")
 axa[0,1].set_ylabel("y")
-axa[0,1].set_title("Pendulum 2")
+axa[0,1].set_title("Pendulum B")
 axa[0,1].legend()
 axa[0,1].set_aspect('equal')
 
@@ -254,7 +258,7 @@ axa[1,0].plot(x111, y111, label="m1")
 axa[1,0].plot(x222, y222, label="m2", color = "gold")
 axa[1,0].set_xlabel("x")
 axa[1,0].set_ylabel("y")
-axa[1,0].set_title("Pendulum 3")
+axa[1,0].set_title("Pendulum C")
 axa[1,0].legend()
 axa[1,0].set_aspect('equal')
 
@@ -262,7 +266,7 @@ axa[1,1].plot(x1111, y1111, label="m1")
 axa[1,1].plot(x2222, y2222, label="m2", color = "grey")
 axa[1,1].set_xlabel("x")
 axa[1,1].set_ylabel("y")
-axa[1,1].set_title("Pendulum 4")
+axa[1,1].set_title("Pendulum D")
 axa[1,1].legend()
 axa[1,1].set_aspect('equal')
 
@@ -281,17 +285,17 @@ ax.set_ylim(-1.5 * (l1 + l2), 1.5 * (l1 + l2))
 #ax.plot(0, 0, 'o', color = "green")  # Origin
 
 # Initialization of the pendulums
-ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum 1")
-ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum 2")
-ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="gold", label="Pendulum 3") 
-ln4, = ax.plot([], [], 'o-', lw=3, markersize=8, color="white", label="Pendulum 4")
+ln1, = ax.plot([], [], 'o-', lw=3, markersize=8, color="magenta", label="Pendulum A")
+ln2, = ax.plot([], [], 'o-', lw=3, markersize=8, color="cyan", label="Pendulum B")
+ln3, = ax.plot([], [], 'o-', lw=3, markersize=8, color="gold", label="Pendulum C") 
+ln4, = ax.plot([], [], 'o-', lw=3, markersize=8, color="white", label="Pendulum D")
 ax.legend()
 
 def animate(i):
-    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendulum 1
-    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendulum 2
-    ln3.set_data([0, x111[i], x222[i]], [0, y111[i], y222[i]])  # Pendulum 3
-    ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendulum 4
+    ln1.set_data([0, x1[i], x2[i]], [0, y1[i], y2[i]])  # Pendulum A
+    ln2.set_data([0, x11[i], x22[i]], [0, y11[i], y22[i]])  # Pendulum B
+    ln3.set_data([0, x111[i], x222[i]], [0, y111[i], y222[i]])  # Pendulum C
+    ln4.set_data([0, x1111[i], x2222[i]], [0, y1111[i], y2222[i]])  # Pendulum D
     return ln1, ln2
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t), interval=50, blit=True)
