@@ -6,6 +6,9 @@ SPIN-UP phase for the double pendulum system
 3. SPIN-UP phase -> 3.1 via RK4
                     3.2 via scipy.linalg.expm
 
+!! Caution:
+When the time step is too large, RK4 seems to produce a bias.
+When the time step is small enough, the two methods give the same results.
 """
 
 import numpy as np
@@ -49,7 +52,7 @@ def jacobian(w1, w2, th1, th2):
     return jac
 
 ### Runge-Kutta 4 for matrices ###
-def rk4_matrix(dt, N, A, delta_0):
+def RK4_matrix(dt, N, A, delta_0):
     """ Runge-Kutta 4 scheme for F = A@y """
     y = np.zeros((4, N+1))
     y[:, 0] = delta_0 # delta's initial conditions
@@ -83,7 +86,7 @@ J = jacobian(w1_0, w2_0, th1_0, th2_0)
 
 #-------------------------------------------
 ### Solving delta_X(t) with RK4
-delta = rk4_matrix(dt, N, J, delta_0)
+delta = RK4_matrix(dt, N, J, delta_0)
 
 def lya_exp(t, delta):
     lya = np.zeros(N)
@@ -126,3 +129,48 @@ plt.grid()
 plt.savefig("lyapunov_spinup.png")
 
 plt.show()
+
+"""
+### SPIN-UP ### (Etienne's code)
+# time parameters
+t_max = 100
+N = 100
+t = np.linspace(0,t_max,N)
+
+# initial conditions
+th1_0 = 1.5
+M = jacobian(th1_0,0,0,0)
+dx_0 = [0, 0, 10**(-10), 0]
+
+# solving for dx with the exponential matrix
+dx = np.zeros((N,4))
+for i in range(N):
+    dx[i] = sp.linalg.expm(M*t[i]) @ dx_0
+
+# computing the lyapunov exponent
+norm = np.zeros(N)
+lyap = np.zeros(N)
+for i in range(N):
+    norm[i] = np.linalg.norm(dx[i])
+    lyap[i] = np.log(norm[i]/norm[0])*1/t[i]
+ 
+# plotting the lyapunov exponent
+plt.figure()
+plt.plot(t, lyap, label = f"lyap[-1] = {lyap[-1]}")
+plt.suptitle(f"SPIN-UP for theta1 = {th1_0}")
+plt.ylabel("Lyapunov exponent")
+plt.xlabel("Time (s)")
+plt.legend()
+plt.grid()
+plt.show()
+
+# Verifying with theoretical values of lyapunov_max #
+eigenvalue, eigenvector = np.linalg.eig(M)
+print()
+print(f"Eigenvalues of the jacobian matrix at theta1 = {th1_0}:")
+print(eigenvalue)
+print()
+print("Experimental lyapunov exponent:")
+print(f"lyap[-1] = {lyap[-1]}")
+print()
+"""

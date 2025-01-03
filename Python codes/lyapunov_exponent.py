@@ -1,10 +1,13 @@
 """ 
 This code aims to compute the Lyapunov exponents of the double pendulum system
+
 """
 
+# Libraries
 import numpy as np
-import scipy as sp
+import scipy as sp # For the matrix exponential
 import matplotlib.pyplot as plt
+from tqdm import tqdm # Progression bar
 
 # Parameters
 m1 = 1
@@ -13,20 +16,23 @@ l1 = 1
 l2 = 1
 g = 9.81
 
-# Time parameters and discretization
+# Time parameters
 t_max = 20
-h = 0.01 # Not smaller than that for the gif
-N = int(np.floor(t_max/h))+1
+h = 0.01 
+N = int(np.floor(t_max/h))+1 # about 2000 timesteps
+t = np.linspace(0, t_max, N)
 
 # Initial conditions
 w1_0 = 0
 w2_0 = 0
 th1_0 = 1.5
 th2_0 = 0
-
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-dx0 = np.random.rand(4)
-dx0 = dx0/(np.linalg.norm(dx0)*10**10)
+
+# Initial delta_x
+#dx0 = np.random.rand(4)
+dx0 = np.array([0, 0, 1, 0])
+dx0 = dx0/(np.linalg.norm(dx0)*10**10) # do that norm(dx0) = 10**(-10)
 u0d = u0 + dx0
 
 def F_deriv(w1, w2, th1, th2):
@@ -42,9 +48,8 @@ def F_deriv(w1, w2, th1, th2):
     return np.array([w1_dot, w2_dot, w1, w2])
     
     
-def solve_RK4(f, u0, h, t_max):
-    N = int(np.floor(t_max / h)) + 1
-    t = np.linspace(0, t_max, N)
+def solve_RK4(f, u0, h):
+    """ Returns : u (4x1 array of last computed values)"""
     u = np.zeros(4)
     u = u0
     for i in range(N - 1):
@@ -53,10 +58,10 @@ def solve_RK4(f, u0, h, t_max):
         k3 = h * f(u[0] + k2[0]/2, u[1] + k2[1]/2, u[2] + k2[2]/2, u[3] + k2[3]/2)
         k4 = h * f(u[0] + k3[0], u[1] + k3[1], u[2] + k3[2], u[3] + k3[3])
         u = u + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
-    return t, u
+    return u # last computed set of 4 values
 
-t1, u1 = solve_RK4(F_deriv, u0, h, t_max)
-t2, u1d = solve_RK4(F_deriv, u0d, h, t_max)
+u1 = solve_RK4(F_deriv, u0, h)
+u1d = solve_RK4(F_deriv, u0d, h)
 """
 th1 = u1[:,2] 
 th2 = u1[:,3]
@@ -68,7 +73,6 @@ th2d = u1d[:,3]
 w1d = u1d[:,0]
 w2d = u1d[:,1]
 """
-
 
 def jacobian(th1, th2, w1, w2):
     jac = np.zeros((4,4))
@@ -88,54 +92,61 @@ def jacobian(th1, th2, w1, w2):
 
 
 def lyapunov(u, dx):
-    N = 20
-    M = jacobian(u[2],u[3],u[0],u[1])
-    dxf = sp.linalg.expm(M*N) @ dx
+    """ Computing the local lyapunov exponent at t_max, starting from a given u0 and delta_x"""
+    t = 20 # = t_max = 20 sec, chosen arbitrarily according to the spin-up
+    M = jacobian(u[2],u[3],u[0],u[1]) # evaluating the jacobian at the 20th timestep
+    dxf = sp.linalg.expm(M*t) @ dx # solving for delta_x
     norm = np.linalg.norm(dxf)
-    lyapf = np.log(norm/np.linalg.norm(dx))*1/N
+    lyapf = np.log(norm/np.linalg.norm(dx))*1/N # Lyapunov exponent of the 20th timestep
     return lyapf, dxf
 
-th = np.linspace(0,np.pi,30)
-lya_th = np.zeros(30)
-for p in range(30):
-    u0 = np.array([0, 0, th[p], th[p]])
-    lya = np.zeros(50)
-    for i in range(50):
-        t1, u1 = solve_RK4(F_deriv, u0, h, t_max)
-        lya[i], dx = lyapunov(u0, dx0)
-        u0 = u1
-        dx0 = dx/(np.linalg.norm(dx)*10**10)
-    lya_th[p] = np.average(lya)
-plt.plot(th, lya_th, label = "Lyapunov exponent")
-plt.suptitle("Theta-theta initial conditions")
-plt.ylabel("Lyapunov")
-plt.xlabel("Theta (rad)")
-plt.legend()
-plt.grid()
-plt.show()
+#-------------------------------------------
+
+# Initial conditions
+dx0 = np.array([0, 0, 1, 0])
+dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
+
+th = np.linspace(0,np.pi,30) # Angle array
+
+theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
+theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
+zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
+
+def lyap_graph(u_0, dx0, h, solve_RK4, F_deriv, lyapunov, ):
+    """Computes the global lyapunov exponents for different initial conditions"""
+
+    lya_th = np.zeros(30) # "Lyapunov for each angle" array
+
+    steps = 30*50
+    with tqdm(total=steps) as pbar: # Progression bar
+        for p in range(30):
+            u0 = u_0[p]
+            lya = np.zeros(50)
+            for i in range(50):
+                u1 = solve_RK4(F_deriv, u0, h) # updating th1, th2, w1, w2
+                lya[i], dx = lyapunov(u0, dx0)
+                u0 = u1 # updating initial conditions
+                dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
+                pbar.update(1)  # Updates the progression bar
+            lya_th[p] = np.average(lya)
     
+    if u_0 == theta_theta:
+        title = "Theta-theta initial conditions"
+    elif u_0 == theta_zero:
+        title = "Theta-0 initial conditions"
+    else:
+        title = "0-Theta initial conditions"
+    
+    plt.figure()
+    plt.plot(th, lya_th, label = "Lyapunov exponent average")
+    plt.suptitle(title)
+    plt.ylabel("Lyapunov")
+    plt.xlabel("Theta (rad)")
+    plt.legend()
+    plt.grid()
+    plt.savefig(f"lyap_{title}.png")
+    plt.show()
 
-
-"""
-N = 100
-M = jacobian(3,0,0,0)
-dx_0 = [0, 0, 10**(-10), 0]
-t = np.linspace(0,N,N)
-dx = np.zeros((N,4))
-for i in range(N):
-    dx[i] = sp.linalg.expm(M*t[i]) @ dx_0
-
-norm = np.zeros(N)
-lyap = np.zeros(N)
-for i in range(N):
-    norm[i] = np.linalg.norm(dx[i])
-    lyap[i] = np.log(norm[i]/norm[0])*1/t[i]
-plt.plot(t,lyap)
-plt.show()
-
-# Verifying with theoretical values of lyapunov_max
-eigenvalue, eigenvector = np.linalg.eig(M)
-print()
-print(eigenvalue)
-print()
-"""
+lyap_graph(theta_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+lyap_graph(theta_zero, dx0, h, solve_RK4, F_deriv, lyapunov)
+lyap_graph(zero_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
