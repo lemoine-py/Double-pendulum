@@ -92,7 +92,7 @@ def jacobian(th1, th2, w1, w2):
 
 
 def lyapunov(u, dx):
-    """ Computing the local lyapunov exponent at t_max, starting from a given u0 and delta_x"""
+    """ Computing the local largest lyapunov exponent at t_max, starting from a given u0 and delta_x"""
     t = 20 # = t_max = 20 sec, chosen arbitrarily according to the spin-up
     M = jacobian(u[2],u[3],u[0],u[1]) # evaluating the jacobian at the 20th timestep
     dxf = sp.linalg.expm(M*t) @ dx # solving for delta_x
@@ -112,8 +112,8 @@ theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
 theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
 zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
 
-def lyap_graph(u_0, dx0, h, solve_RK4, F_deriv, lyapunov, ):
-    """Computes the global lyapunov exponents for different initial conditions"""
+def global_lyaps(u_0, dx0, h, solve_RK4, F_deriv, lyapunov):
+    """Computes the global largest lyapunov exponents for different initial conditions"""
 
     lya_th = np.zeros(30) # "Lyapunov for each angle" array
 
@@ -129,24 +129,34 @@ def lyap_graph(u_0, dx0, h, solve_RK4, F_deriv, lyapunov, ):
                 dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
                 pbar.update(1)  # Updates the progression bar
             lya_th[p] = np.average(lya)
-    
+    return lya_th
+
+
+def graph_lyaps(th, lya_th, u_0):
+    """ Plots the Lyapunov exponents for different initial conditions"""
+
     if u_0 == theta_theta:
-        title = "Theta-theta initial conditions"
+        title = r"Initial conditions: $\theta_1 = \theta_2 = \theta$"
     elif u_0 == theta_zero:
-        title = "Theta-0 initial conditions"
-    else:
-        title = "0-Theta initial conditions"
+        title = r"Initial conditions: $\theta_1 = \theta$, $\theta_2 = 0$"
+    elif u_0 == zero_theta:
+        title = r"Initial conditions: $\theta_1 = 0$, $\theta_2 = \theta$"
     
     plt.figure()
-    plt.plot(th, lya_th, label = "Lyapunov exponent average")
+    plt.plot(th, lya_th, label = "Largest lyap exp average")
     plt.suptitle(title)
-    plt.ylabel("Lyapunov")
-    plt.xlabel("Theta (rad)")
+    plt.ylabel("Lyapunov exponent")
+    plt.xlabel(r"$\theta$ (rad)")
     plt.legend()
     plt.grid()
     plt.savefig(f"lyap_{title}.png")
     plt.show()
 
-lyap_graph(theta_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
-lyap_graph(theta_zero, dx0, h, solve_RK4, F_deriv, lyapunov)
-lyap_graph(zero_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+lyap_theta_theta = global_lyaps(theta_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+graph_lyaps(th, lyap_theta_theta, theta_theta)
+
+lyap_theta_zero = global_lyaps(theta_zero, dx0, h, solve_RK4, F_deriv, lyapunov)
+graph_lyaps(th, lyap_theta_zero, theta_zero)
+
+lyap_zero_theta = global_lyaps(zero_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+graph_lyaps(th, lyap_zero_theta, zero_theta)
