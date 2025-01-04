@@ -135,12 +135,15 @@ def global_lyaps(u_0, dx0, h, solve_RK4, F_deriv, lyapunov):
 def graph_lyaps(th, lya_th, u_0):
     """ Plots the Lyapunov exponents for different initial conditions"""
 
-    if u_0 == theta_theta:
+    if all(np.array_equal(a, b) for a, b in zip(u_0, theta_theta)):
         title = r"Initial conditions: $\theta_1 = \theta_2 = \theta$"
-    elif u_0 == theta_zero:
+        filename = "lyap_theta_theta.png"
+    elif all(np.array_equal(a, b) for a, b in zip(u_0, theta_zero)):
         title = r"Initial conditions: $\theta_1 = \theta$, $\theta_2 = 0$"
-    elif u_0 == zero_theta:
+        filename = "lyap_theta_zero.png"
+    elif all(np.array_equal(a, b) for a, b in zip(u_0, zero_theta)):
         title = r"Initial conditions: $\theta_1 = 0$, $\theta_2 = \theta$"
+        filename = "lyap_zero_theta.png"
     
     plt.figure()
     plt.plot(th, lya_th, label = "Largest lyap exp average")
@@ -149,14 +152,14 @@ def graph_lyaps(th, lya_th, u_0):
     plt.xlabel(r"$\theta$ (rad)")
     plt.legend()
     plt.grid()
-    plt.savefig(f"lyap_{title}.png")
-    plt.show()
+    plt.savefig(filename)
 
 lyap_theta_theta = global_lyaps(theta_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
-graph_lyaps(th, lyap_theta_theta, theta_theta)
-
 lyap_theta_zero = global_lyaps(theta_zero, dx0, h, solve_RK4, F_deriv, lyapunov)
-graph_lyaps(th, lyap_theta_zero, theta_zero)
-
 lyap_zero_theta = global_lyaps(zero_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+
+graph_lyaps(th, lyap_theta_theta, theta_theta)
+graph_lyaps(th, lyap_theta_zero, theta_zero)
 graph_lyaps(th, lyap_zero_theta, zero_theta)
+
+plt.show()
