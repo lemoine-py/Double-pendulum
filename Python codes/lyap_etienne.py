@@ -54,8 +54,8 @@ def solve_RK4(f, u0, h, N):
         u = u + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     return u # last computed set of 4 values
 
-u1 = solve_RK4(F_deriv, u0, h)
-u1d = solve_RK4(F_deriv, u0d, h)
+u1 = solve_RK4(F_deriv, u0, h, N)
+u1d = solve_RK4(F_deriv, u0d, h, N)
 """
 th1 = u1[:,2] 
 th2 = u1[:,3]
@@ -145,7 +145,7 @@ with tqdm(total=steps) as pbar: # Progression bar
         u0 = np.array([0, 0, th[p], th[p]])
         lya = np.zeros(50)
         for i in range(50):
-            u1 = solve_RK4(F_deriv, u0, h) # updating th1, th2, w1, w2
+            u1 = solve_RK4(F_deriv, u0, h, N) # updating th1, th2, w1, w2
             lya[i], dx = lyapunov(u0, dx0)
             u0 = u1 # updating initial conditions
             dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
@@ -159,7 +159,7 @@ plt.ylabel("Lyapunov")
 plt.xlabel("Theta (rad)")
 plt.legend()
 plt.grid()
-plt.show()
+plt.savefig("lyap_eti_theta_theta.png")
 
 #-------------------------------------------
 
@@ -175,7 +175,7 @@ with tqdm(total=steps) as pbar: # Progression bar
         u0 = np.array([0, 0, th[p], 0])
         lya = np.zeros(50)
         for i in range(50):
-            u1 = solve_RK4(F_deriv, u0, h) # updating th1, th2, w1, w2
+            u1 = solve_RK4(F_deriv, u0, h, N) # updating th1, th2, w1, w2
             lya[i], dx = lyapunov(u0, dx0)
             u0 = u1 # updating initial conditions
             dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
@@ -189,7 +189,7 @@ plt.ylabel("Lyapunov")
 plt.xlabel("Theta (rad)")
 plt.legend()
 plt.grid()
-plt.show()
+plt.savefig("lyap_eti_theta_zero.png")
 
 #-------------------------------------------
 dx0 = np.array([0, 0, 1, 0])
@@ -204,7 +204,7 @@ with tqdm(total=steps) as pbar: # Progression bar
         u0 = np.array([0, 0, 0, th[p]])
         lya = np.zeros(50)
         for i in range(50):
-            u1 = solve_RK4(F_deriv, u0, h) # updating th1, th2, w1, w2
+            u1 = solve_RK4(F_deriv, u0, h, N) # updating th1, th2, w1, w2
             lya[i], dx = lyapunov(u0, dx0)
             u0 = u1 # updating initial conditions
             dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
@@ -218,5 +218,8 @@ plt.ylabel("Lyapunov")
 plt.xlabel("Theta (rad)")
 plt.legend()
 plt.grid()
+plt.savefig("lyap_eti_zero_theta.png")
+
+
 plt.show()
 
