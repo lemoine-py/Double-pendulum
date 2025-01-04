@@ -2,11 +2,23 @@
 
 > This README file is temporary.
 
-## Description of the problem
+## Introduction
 
-The model of the double pendulum consists of two points objects with mass $m$, linked by two arms of fixed length $l$, subject to the gravity force in the vertical. The position of the two objects is completely defined by the angles $\theta_1$ and $\theta_2$ . This system has the characteristic of developing chaotic trajectories above a certain threshold in the energy of the initial condition.
+In this project, we analyze the model of the double pendulum.
+We first solve numerically its lagrangian equations, translated into a system of four first-order ordinary differential equations, with the Runge-Kutta 4 scheme implemented via python.
+We then represent visually the system, by a couple of different types of graphs.
+Finally we analyze the chaoticity of the system, by computing the experimental values of the lyapunov exponents and plotting them into intuitive graphs.
 
-### Chaos and Lyapunov exponent
+## Description of the model
+
+In a nutshell, the model of the double pendulum consists in a pendulum hanging at the bottom of another pendulum.
+In our case, we consider two dimensionless objects of mass resp. $m_1$ and $m_2$, each object being attached to a
+rod of fixed length resp. $l_1$ and $l_2$. We will restrict ourselves to the two-dimensional model, subject to the gravity force in the vertical.
+
+Above a certain energy treshold for the initail conditions, this system is known to be a chaotic one, meaning that the dynamics of the objects, entirely determined
+by the angles $θ_1$ and $θ_2$, are very sensitive to the initial conditions (which are the initial values for $θ_1$,$θ_2$, $\dot{θ}_1$, $\dot{θ}_2$).
+
+## Chaos and Lyapunov exponent
 
 The Lyapunov exponent is a mathematical concept that characterizes the chaotic behaviour of a dynamical system. Let’s say that we have a system
 
@@ -24,13 +36,13 @@ $$ \lambda_{\max }=\lim _{t \rightarrow+\infty} \frac{1}{t} \ln \left(\frac{|\de
 
 ## PROJECT DESCRIPTION
 
-1) Develop the mathematical model for the double pendulum (you should have seen it in some of your previous courses, otherwise it’s easy to find on textbooks online, or to develop yourself).
-2) Implement a numerical scheme with good properties for this type of system. Explain what motivated your choice.
-3) Visualize different trajectories highlighting their possible chaotic behaviour in a qualitative way. Consider the best way to portray the information (e.g. plots against videos, etc..).
+1) Develop the mathematical model for the double pendulum.
+2) Implement the Runge-Kutta 4 numerical scheme for this case.
+3) Visualize different trajectories highlighting their possible chaotic behaviour in a qualitative way.
 4) Compute $\lambda_{\text {max }}$ for different choices of the energy of the system, showing in all cases the convergence for large $t$.
 5) Using the sign of $\lambda_{\max }$ as an indicator, identify the energy threshold at which the system become chaotic.
 
-The largest Lyapunov exponent can be computed following this procedure
+The largest Lyapunov exponent can be computed following this procedure :
 
 ## SPIN-UP
 
