@@ -16,7 +16,7 @@ In our case, we consider two dimensionless objects of mass resp. $m_1$ and $m_2$
 rod of fixed length resp. $l_1$ and $l_2$. We will restrict ourselves to the two-dimensional model, subject to the gravity force in the vertical.
 
 Above a certain energy treshold for the initail conditions, this system is known to be a chaotic one, meaning that the dynamics of the objects, entirely determined
-by the angles $θ_1$ and $θ_2$, are very sensitive to the initial conditions (which are the initial values for $θ_1$,$θ_2$, $\dot{θ}_1$, $\dot{θ}_2$).
+by the angles $\theta_1$ and $\theta_2$, are very sensitive to the initial conditions (which are the initial values for $\theta_1$, $\theta_2$, $\dot{\theta}_1$, $\dot{\theta}_2$).
 
 ## Chaos and Lyapunov exponent
 
