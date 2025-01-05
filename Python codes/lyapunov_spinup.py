@@ -58,7 +58,7 @@ def jacobian(w1, w2, th1, th2):
     return jac
 
 ### Runge-Kutta 4 for matrices ###
-def RK4_matrix(dt, N, A, delta_0):
+def RK4_matrix(A, delta_0, dt, N):
     """ Runge-Kutta 4 scheme for F = A@y """
     y = np.zeros((4, N+1))
     y[:, 0] = delta_0 # delta's initial conditions
@@ -94,7 +94,7 @@ J = jacobian(w1_0, w2_0, th1_0, th2_0)
 
 #-------------------------------------------
 ### Solving delta_X(t) with RK4
-delta = RK4_matrix(dt, N, J, delta_0)
+delta = RK4_matrix(J, delta_0, dt, N)
 
 def lya_exp(t, delta):
     lya = np.zeros(N)
@@ -157,13 +157,14 @@ plt.grid()
 plt.legend()
 plt.savefig("lyapunov_spinup_xrad.png")
 
-plt.show()
-
-
 """
 #-------------------------------------------
 # SPIN-UP for each initial conditions where theta1 = theta2 = theta
 th = np.linspace(0,np.pi,30) # Angle array
+
+theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
+theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
+zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
 
 lyap_spinup1 = np.zeros(30)
 lyap_spinup2 = np.zeros(30)
@@ -176,11 +177,11 @@ lyap_spinup_theo = np.zeros(30)
 
 with tqdm.tqdm(total=30*N) as pbar: # Progression bar
     for p in range(30):
-        J = jacobian(0, 0, th[p], th[p])
+        Jp = jacobian(0, 0, th[p], th[p])
+
         delta_ap = np.zeros((N,4))
-        delta_ap[0] = sp.linalg.expm(J*t_delta[0]) @ delta_0
-        for i in range(1,N):
-            delta_ap[i] = sp.linalg.expm(J*t_delta[i]) @ delta_ap[i-1]
+        for i in range(N):
+            delta_ap[i] = sp.linalg.expm(Jp*t_delta[i]) @ delta_0
             pbar.update(1)
         lya_ap = lya_a_exp(t_delta, delta_ap)
 
@@ -193,7 +194,7 @@ with tqdm.tqdm(total=30*N) as pbar: # Progression bar
         filtered_lya_ap = np.array(lya_ap)[np.isfinite(lya_ap)] # Filtering the NaN and inf values
         lyap_spinup_ave[p] = np.average(filtered_lya_ap)
 
-        lyap_spinup_theo[p] = np.max(np.linalg.eig(J)[0])
+        lyap_spinup_theo[p] = np.max(np.linalg.eig(Jp)[0])
 
 plt.figure()
 plt.plot(th, lyap_spinup1, "--", color = "grey", label = f"{lambda_latex} at t = 0.5")
@@ -209,17 +210,13 @@ plt.suptitle(r"SPIN-UP for each initial conditions where $\theta_{1,0} = \theta_
 plt.ylabel("Lyapunov exponent")
 plt.xlabel(r"$\theta$ (rad)")
 #plt.ylim(None, 10)
-plt.text(0.2, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.2, 0.3, f"dt = {dt}\n {t_max_latex} = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.legend()
 plt.grid()
 
 plt.savefig("local_lyap_theta_theta.png")
 
+"""
 plt.show()
 
 #-------------------------------------------
-
-theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
-theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
-zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
-"""
