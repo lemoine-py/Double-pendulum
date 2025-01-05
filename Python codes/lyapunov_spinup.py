@@ -16,6 +16,11 @@ import scipy as sp
 import matplotlib.pyplot as plt
 import tqdm # Progression bar
 
+# Latex labels
+lambda_latex = r"$\lambda_{max}$"
+delta_latex = r"$\delta x_0$"
+t_max_latex = r"$t_{max}$"
+
 # Parameters
 l1 = 1
 l2 = 1
@@ -70,8 +75,8 @@ def RK4_matrix(dt, N, A, delta_0):
 # Arbitrary initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 1.7
-th2_0 = 1.7
+th1_0 = 1
+th2_0 = 1
 
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
@@ -128,22 +133,17 @@ print(f"Eigenvalues of the jacobian matrix when u0 = {u0}:")
 print(eigenvalue)
 print()
 print("Theoretical lyapunov exponent:")
-print(f"lyap_max = {np.max(eigenvalue.real)}")
+print(f"{lambda_latex} = {np.max(eigenvalue.real)}")
 print()
 print("Experimental lyapunov exponent:")
-print(f"lyap[-1] = {lya_a[-1]}")
-print(f"lyap[500] = {lya_a[500]}") # t = 5 if dt = 0.01
-print(f"lyapunov average from the 400th to the 1000th iteration: {np.average(lya_a[400:1000])}")
+print(f"{lambda_latex}({t_max_latex}) = {lya_a[-1]}")
+print(f"{lambda_latex}(t=20) = {lya_a[2000]}") # t = 20 if dt = 0.01
+print(f"lyapunov average from t=20 to {t_max_latex}: {np.average(lya_a[2000:N])}")
 print()
-print(f"N.B. Lyap length = N: {len(lya_a)}")
+print(f"N.B. lyapunov array length = N = {len(lya_a)}")
 print()
 #-------------------------------------------
 # Plotting the single spin-up results
-
-# Latex labels
-lambda_latex = r"$\lambda_{max}$"
-delta_latex = r"$\delta x_0$"
-t_max_latex = r"$t_{max}$"
 
 plt.figure()
 plt.plot(t_delta, lya, label = "RK4")
@@ -155,12 +155,12 @@ plt.ylabel("Lyapunov exponent")
 plt.text(0.8, 0.4, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
-plt.savefig("lyapunov_spinup_z.png")
+plt.savefig("lyapunov_spinup_xrad.png")
 
 plt.show()
 
 
-
+"""
 #-------------------------------------------
 # SPIN-UP for each initial conditions where theta1 = theta2 = theta
 th = np.linspace(0,np.pi,30) # Angle array
@@ -222,5 +222,4 @@ plt.show()
 theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
 theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
 zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
-
-
+"""

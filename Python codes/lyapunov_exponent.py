@@ -83,7 +83,7 @@ def jacobian(w1, w2, th1, th2):
 
 def lyapunov(u, dx):
     """ Computing lambda_max after t_step seconds, starting from a given u and dx"""
-    t_step = 30 # chosen arbitrarily according to the spin-up phase
+    t_step = 20 # chosen arbitrarily according to the spin-up phase
     J = jacobian(u[0],u[1],u[2],u[3]) # evaluating the jacobian at u
     dxf = sp.linalg.expm(J*t_step) @ dx # solving for dx after t seconds
     norm = np.linalg.norm(dxf)
@@ -142,7 +142,7 @@ def graph_lyaps(th, lya_th, u_0):
     plt.suptitle(title)
     plt.ylabel("Lyapunov exponent")
     plt.xlabel(r"$\theta$ (rad)")
-    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = 50*{t_step_latex} = 50*30 \n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = 50*{t_step_latex} = 50*20\n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
     plt.legend()
     plt.grid()
     plt.savefig(filename)
