@@ -83,11 +83,11 @@ def jacobian(w1, w2, th1, th2):
 
 def lyapunov(u, dx):
     """ Computing lambda_max after t_step seconds, starting from a given u and dx"""
-    t = 20 # = t_step = 20 sec, chosen arbitrarily according to the spin-up
+    t_step = 30 # chosen arbitrarily according to the spin-up phase
     J = jacobian(u[0],u[1],u[2],u[3]) # evaluating the jacobian at u
-    dxf = sp.linalg.expm(J*t) @ dx # solving for dx after t seconds
+    dxf = sp.linalg.expm(J*t_step) @ dx # solving for dx after t seconds
     norm = np.linalg.norm(dxf)
-    lyapf = np.log(norm/np.linalg.norm(dx))*1/t # Lyapunov exponent after t seconds
+    lyapf = np.log(norm/np.linalg.norm(dx))*1/t_step # Lyapunov exponent after t seconds
     return lyapf, dxf
 
 #-------------------------------------------
@@ -116,7 +116,9 @@ def global_lyaps(u_0, dx0, dt, solve_RK4, F_deriv, lyapunov):
                 u0 = u1 # updating initial conditions
                 dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
                 pbar.update(1)  # Updates the progression bar
-            lya_th[p] = np.average(lya)
+            lya_th[p] = np.average(lya) 
+            # filtered_lya_th = np.array(lya_th)[np.isfinite(lya_th)] # Filtering the NaN and inf values
+            # lya_th_ave[p] = np.average(filtered_lya_th)
     return lya_th
 
 def graph_lyaps(th, lya_th, u_0):
@@ -140,19 +142,19 @@ def graph_lyaps(th, lya_th, u_0):
     plt.suptitle(title)
     plt.ylabel("Lyapunov exponent")
     plt.xlabel(r"$\theta$ (rad)")
-    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = 50*{t_step_latex} = 50*20 \n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = 50*{t_step_latex} = 50*30 \n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
     plt.legend()
     plt.grid()
     plt.savefig(filename)
 
 lyap_theta_theta = global_lyaps(theta_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
-lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, solve_RK4, F_deriv, lyapunov)
-lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, solve_RK4, F_deriv, lyapunov)
-lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
+#lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, solve_RK4, F_deriv, lyapunov)
+#lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, solve_RK4, F_deriv, lyapunov)
+#lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
 
 graph_lyaps(th, lyap_theta_theta, theta_theta)
-graph_lyaps(th, lyap_theta_minustheta, theta_minustheta)
-graph_lyaps(th, lyap_theta_zero, theta_zero)
-graph_lyaps(th, lyap_zero_theta, zero_theta)
+#graph_lyaps(th, lyap_theta_minustheta, theta_minustheta)
+#graph_lyaps(th, lyap_theta_zero, theta_zero)
+#graph_lyaps(th, lyap_zero_theta, zero_theta)
 
 plt.show()

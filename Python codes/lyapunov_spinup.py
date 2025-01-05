@@ -70,14 +70,14 @@ def RK4_matrix(dt, N, A, delta_0):
 # Arbitrary initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 0.2
-th2_0 = 0.2
+th1_0 = 1.7
+th2_0 = 1.7
 
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
 # Time parameters
 t_max = 100
-dt = 0.1
+dt = 0.01
 N = int(np.floor(t_max/dt))+1
 t_delta = np.linspace(0, t_max, N) # time array
 
@@ -128,15 +128,15 @@ print(f"Eigenvalues of the jacobian matrix when u0 = {u0}:")
 print(eigenvalue)
 print()
 print("Theoretical lyapunov exponent:")
-print(f"lyap_max = {np.max(eigenvalue)}")
+print(f"lyap_max = {np.max(eigenvalue.real)}")
 print()
 print("Experimental lyapunov exponent:")
 print(f"lyap[-1] = {lya_a[-1]}")
-print(f"lyap[50] = {lya_a[50]}") # t = 10 if dt = 0.01 and t_max = 100
-print(f"lyapunov average from the 100th to the 200th iteration: {np.average(lya_a[400:1000])}")
+print(f"lyap[500] = {lya_a[500]}") # t = 5 if dt = 0.01
+print(f"lyapunov average from the 400th to the 1000th iteration: {np.average(lya_a[400:1000])}")
 print()
-print(f"Lyap length: {len(lya_a)}")
-
+print(f"N.B. Lyap length = N: {len(lya_a)}")
+print()
 #-------------------------------------------
 # Plotting the single spin-up results
 
@@ -148,14 +148,18 @@ t_max_latex = r"$t_{max}$"
 plt.figure()
 plt.plot(t_delta, lya, label = "RK4")
 plt.plot(t_delta, lya_a, "--", label = "linalg.expm")
-plt.plot(t_delta, np.max(eigenvalue)*np.ones(N), ":", color = "red", label = f"Theoretical {lambda_latex} = {np.max(eigenvalue)}")
+plt.plot(t_delta, np.max(eigenvalue.real)*np.ones(N), ":", color = "red", label = f"Theoretical {lambda_latex} = {np.max(eigenvalue.real)}")
 plt.suptitle(f"SPIN-UP for u0 = [{w1_0}, {w2_0}, {th1_0}, {th2_0}]")
 plt.xlabel("Time (s)")
 plt.ylabel("Lyapunov exponent")
-plt.text(0.8, 0.4, f"dt = {dt} \n t_max = 100 \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.8, 0.4, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
 plt.savefig("lyapunov_spinup_z.png")
+
+plt.show()
+
+
 
 #-------------------------------------------
 # SPIN-UP for each initial conditions where theta1 = theta2 = theta
@@ -205,7 +209,7 @@ plt.suptitle(r"SPIN-UP for each initial conditions where $\theta_{1,0} = \theta_
 plt.ylabel("Lyapunov exponent")
 plt.xlabel(r"$\theta$ (rad)")
 #plt.ylim(None, 10)
-plt.text(0.2, 0.3, f"dt = {dt} \n t_max = 100 \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.2, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.legend()
 plt.grid()
 
