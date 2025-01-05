@@ -70,8 +70,8 @@ def RK4_matrix(dt, N, A, delta_0):
 # Arbitrary initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 3.14
-th2_0 = 3.14
+th1_0 = 0.2
+th2_0 = 0.2
 
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
@@ -143,6 +143,7 @@ print(f"Lyap length: {len(lya_a)}")
 # Latex labels
 lambda_latex = r"$\lambda_{max}$"
 delta_latex = r"$\delta x_0$"
+t_max_latex = r"$t_{max}$"
 
 plt.figure()
 plt.plot(t_delta, lya, label = "RK4")
@@ -151,7 +152,7 @@ plt.plot(t_delta, np.max(eigenvalue)*np.ones(N), ":", color = "red", label = f"T
 plt.suptitle(f"SPIN-UP for u0 = [{w1_0}, {w2_0}, {th1_0}, {th2_0}]")
 plt.xlabel("Time (s)")
 plt.ylabel("Lyapunov exponent")
-plt.text(0.8, 0.4, f"dt = {dt} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.8, 0.4, f"dt = {dt} \n t_max = 100 \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
 plt.savefig("lyapunov_spinup_z.png")
@@ -179,11 +180,11 @@ with tqdm.tqdm(total=30*N) as pbar: # Progression bar
             pbar.update(1)
         lya_ap = lya_a_exp(t_delta, delta_ap)
 
-        lyap_spinup1[p] = lya_ap[1]
-        lyap_spinup2[p] = lya_ap[2]
-        lyap_spinup3[p] = lya_ap[3]
-        lyap_spinup4[p] = lya_ap[4]
-        lyap_spinup5[p] = lya_ap[5]
+        lyap_spinup1[p] = lya_ap[5]
+        lyap_spinup2[p] = lya_ap[20]
+        lyap_spinup3[p] = lya_ap[35]
+        lyap_spinup4[p] = lya_ap[50]
+        lyap_spinup5[p] = lya_ap[65]
 
         filtered_lya_ap = np.array(lya_ap)[np.isfinite(lya_ap)] # Filtering the NaN and inf values
         lyap_spinup_ave[p] = np.average(filtered_lya_ap)
@@ -191,24 +192,24 @@ with tqdm.tqdm(total=30*N) as pbar: # Progression bar
         lyap_spinup_theo[p] = np.max(np.linalg.eig(J)[0])
 
 plt.figure()
-plt.plot(th, lyap_spinup1, "--", color = "grey", label = f"{lambda_latex} at t = 0.1")
-plt.plot(th, lyap_spinup2, "--", color = "gold", label = f"{lambda_latex} at t = 0.2")
-plt.plot(th, lyap_spinup3, "--", color = "orange", label = f"{lambda_latex} at t = 0.3")
-plt.plot(th, lyap_spinup4, "--", color = "magenta", label = f"{lambda_latex} at t = 0.4")
-plt.plot(th, lyap_spinup5, "--", color = "purple", label = f"{lambda_latex} at t = 0.5")
+plt.plot(th, lyap_spinup1, "--", color = "grey", label = f"{lambda_latex} at t = 0.5")
+plt.plot(th, lyap_spinup2, "--", color = "gold", label = f"{lambda_latex} at t = 2")
+plt.plot(th, lyap_spinup3, "--", color = "orange", label = f"{lambda_latex} at t = 3.5")
+plt.plot(th, lyap_spinup4, "--", color = "magenta", label = f"{lambda_latex} at t = 5")
+plt.plot(th, lyap_spinup5, "--", color = "purple", label = f"{lambda_latex} at t = 6.5")
 
-plt.plot(th, lyap_spinup_ave, color = "green", label = f"np.average(filtered_{lambda_latex})")
+plt.plot(th, lyap_spinup_ave, color = "green", label = f"np.average(filtered_{lambda_latex}(t))")
 plt.plot(th, lyap_spinup_theo, color = "red", label = f"Theoretical {lambda_latex}")
 
 plt.suptitle(r"SPIN-UP for each initial conditions where $\theta_{1,0} = \theta_{2,0} = \theta$")
 plt.ylabel("Lyapunov exponent")
 plt.xlabel(r"$\theta$ (rad)")
-plt.ylim(None, 10)
-plt.text(0.8, 0.2, f"dt = {dt} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+#plt.ylim(None, 10)
+plt.text(0.2, 0.3, f"dt = {dt} \n t_max = 100 \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.legend()
 plt.grid()
 
-plt.savefig("lyap_theta_theta_spinup_z.png")
+plt.savefig("local_lyap_theta_theta.png")
 
 plt.show()
 
