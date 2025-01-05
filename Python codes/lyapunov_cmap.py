@@ -1,12 +1,6 @@
-""" 
-This code aims to compute the largest Lyapunov exponents of the double pendulum system
-
-1. Defining the Jacobian matrix
-2. Runge-Kutta 4 for matrices
-
-3. Local Lyapunov exponents
-4. Global Lyapunov exponents
-5. Graphs
+"""
+This script calculates the global Lyapunov exponents for each pair of initial angles
+(θ1, θ2) in the range [0, π] x [0, π] and plots the results as a colormap.
 
 """
 
@@ -87,71 +81,46 @@ def lyapunov(u, dx, t_step):
     lyapf = np.log(norm/np.linalg.norm(dx))*1/t_step # Lyapunov exponent after t seconds
     return lyapf, dxf
 
-#-------------------------------------------
+
 
 th = np.linspace(0,np.pi,30) # Angle array
+lya_pq_th = np.zeros((30,30))
 
-# Templates for initial conditions (u_0)
-theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
-theta_minustheta = [np.array([0, 0, th[p], -th[p]]) for p in range(30)]
-theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
-zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
-
-def global_lyaps(u_0, dx0, dt, solve_RK4, F_deriv, lyapunov):
-    """Computes the global largest lyapunov exponents for different initial conditions"""
-
-    lya_th = np.zeros(30) # "Lyapunov for each angle" array
-
-    steps = 30*50
-    with tqdm(total=steps) as pbar: # Progression bar
-        for p in range(30):
-            u0 = u_0[p]
-            lya = np.zeros(50)
+with tqdm(total=30*30*50) as pbar: # Progression bar
+    for p in range(30):
+        for q in range(30):
+            Jpq = jacobian(0, 0, th[p], th[q])
+            u0 = np.array([0, 0, th[p], th[q]])
+            lya_pq = np.zeros(50)
             for i in range(50):
-                u1 = solve_RK4(F_deriv, u0, dt, N) # updating th1, th2, w1, w2
-                lya[i], dx = lyapunov(u0, dx0, t_step) # computing the lyapunov exponent
-                u0 = u1 # updating initial conditions
-                dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
-                pbar.update(1)  # Updates the progression bar
-            lya_th[p] = np.average(lya) 
-            # filtered_lya_th = np.array(lya_th)[np.isfinite(lya_th)] # Filtering the NaN and inf values
-            # lya_th_ave[p] = np.average(filtered_lya_th)
-    return lya_th
+                u1 = solve_RK4(F_deriv, u0, dt, N)
+                lya_pq[i], dx = lyapunov(u0, dx0, t_step)
+                u0 = u1
+                dx0 = dx/(np.linalg.norm(dx)*10**10)
+                pbar.update(1)
 
-def graph_lyaps(th, lya_th, u_0):
-    """ Plots the Lyapunov exponents for different initial conditions"""
+            lya_pq_th[p][q] = np.average(lya_pq)
 
-    if all(np.array_equal(a, b) for a, b in zip(u_0, theta_theta)):
-        title = r"Initial conditions: $\theta_{1,0}= \theta_{2,0} = \theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
-        filename = "global_lyap_theta_theta.png"
-    elif all(np.array_equal(a, b) for a, b in zip(u_0, theta_minustheta)):
-        title = r"Initial conditions: $\theta_{1,0} = \theta$, $\theta_{2,0} = -\theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
-        filename = "global_lyap_theta_minustheta.png"
-    elif all(np.array_equal(a, b) for a, b in zip(u_0, theta_zero)):
-        title = r"Initial conditions: $\theta_{1,0} = \theta$, $\theta_{2,0} = 0$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
-        filename = "global_lyap_theta_zero.png"
-    elif all(np.array_equal(a, b) for a, b in zip(u_0, zero_theta)):
-        title = r"Initial conditions: $\theta_{1,0} = 0$, $\theta_{2,0} = \theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
-        filename = "global_lyap_zero_theta.png"
-    
-    plt.figure()
-    plt.plot(th, lya_th, label = f"{lambda_n_latex} average")
-    plt.suptitle(title)
-    plt.ylabel("Lyapunov exponent")
-    plt.xlabel(r"$\theta$ (rad)")
-    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = n*{t_step_latex} = 50*20\n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-    plt.legend()
-    plt.grid()
-    plt.savefig(filename)
+# Plot the array as a colormap
+fig, ax = plt.subplots(figsize=(8, 6))
+cax = ax.imshow(lya_pq_th, cmap='jet', extent=[0, np.pi, 0, np.pi], origin='lower')
 
-lyap_theta_theta = global_lyaps(theta_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
-#lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, solve_RK4, F_deriv, lyapunov)
-#lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, solve_RK4, F_deriv, lyapunov)
-#lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
+# Set axis labels and ticks
+ax.set_xlabel(r'$\theta_1$')
+ax.set_ylabel(r'$\theta_2$')
 
-graph_lyaps(th, lyap_theta_theta, theta_theta)
-#graph_lyaps(th, lyap_theta_minustheta, theta_minustheta)
-#graph_lyaps(th, lyap_theta_zero, theta_zero)
-#graph_lyaps(th, lyap_zero_theta, zero_theta)
+# Add colorbar
+cbar = fig.colorbar(cax, ax=ax)
+cbar.set_label('Lyapunov exponent')
 
+# Set axis ticks
+#ax.set_xticks(np.linspace(0, np.pi, 6))
+#ax.set_yticks(np.linspace(0, np.pi, 6))
+#ax.set_xticklabels([f'{tick:.2f}' for tick in np.linspace(0, np.pi, 6)])
+#ax.set_yticklabels([f'{tick:.2f}' for tick in np.linspace(0, np.pi, 6)])
+
+# Show the plot
+plt.title('Global Lyapunov exponents for each pair of initial angles')
+
+plt.savefig("global_lyap_cmap.png")
 plt.show()
