@@ -1,5 +1,12 @@
 """ 
-This code aims to compute the Lyapunov exponents of the double pendulum system
+This code aims to compute the largest Lyapunov exponents of the double pendulum system
+
+1. Defining the Jacobian matrix
+2. Runge-Kutta 4 for matrices
+
+3. Local Lyapunov exponents
+4. Global Lyapunov exponents
+5. Graphs
 
 """
 
@@ -8,6 +15,12 @@ import numpy as np
 import scipy as sp # For the matrix exponential
 import matplotlib.pyplot as plt
 from tqdm import tqdm # Progression bar
+
+# Latex labels
+lambda_latex = r"$\lambda_{max}$"
+delta_latex = r"$\delta x_0$"
+t_max_latex = r"$t_{max}$"
+t_step_latex = r"$t_{step}$"
 
 # Parameters
 m1 = 1
@@ -18,22 +31,15 @@ g = 9.81
 
 # Time parameters
 t_max = 20
-h = 0.01 
-N = int(np.floor(t_max/h))+1 # about 2000 timesteps
+dt = 0.01 
+N = int(np.floor(t_max/dt))+1 # about 2000 timesteps
 t = np.linspace(0, t_max, N)
 
-# Initial conditions
-w1_0 = 0
-w2_0 = 0
-th1_0 = 1.5
-th2_0 = 0
-u0 = np.array([w1_0, w2_0, th1_0, th2_0])
-
-# Initial delta_x
+# Initial dx
 #dx0 = np.random.rand(4)
 dx0 = np.array([0, 0, 1, 0])
 dx0 = dx0/(np.linalg.norm(dx0)*10**10) # do that norm(dx0) = 10**(-10)
-u0d = u0 + dx0
+dx0 = np.array([0, 0, 10**(-10), 0])
 
 def F_deriv(w1, w2, th1, th2):
     num1 = -g*(2*m1+m2)*np.sin(th1)-m2*g*np.sin(th1-2*th2)-2*np.sin(th1-th2)*m2*(w2**2*l2+w1**2*l1*np.cos(th1-th2))
@@ -47,34 +53,19 @@ def F_deriv(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
     
-    
-def solve_RK4(f, u0, h):
+def solve_RK4(f, u0, dt):
     """ Returns : u (4x1 array of last computed values)"""
     u = np.zeros(4)
     u = u0
     for i in range(N - 1):
-        k1 = h * f(u[0], u[1], u[2], u[3])
-        k2 = h * f(u[0] + k1[0]/2, u[1] + k1[1]/2, u[2] + k1[2]/2, u[3] + k1[3]/2)
-        k3 = h * f(u[0] + k2[0]/2, u[1] + k2[1]/2, u[2] + k2[2]/2, u[3] + k2[3]/2)
-        k4 = h * f(u[0] + k3[0], u[1] + k3[1], u[2] + k3[2], u[3] + k3[3])
+        k1 = dt * f(u[0], u[1], u[2], u[3])
+        k2 = dt * f(u[0] + k1[0]/2, u[1] + k1[1]/2, u[2] + k1[2]/2, u[3] + k1[3]/2)
+        k3 = dt * f(u[0] + k2[0]/2, u[1] + k2[1]/2, u[2] + k2[2]/2, u[3] + k2[3]/2)
+        k4 = dt * f(u[0] + k3[0], u[1] + k3[1], u[2] + k3[2], u[3] + k3[3])
         u = u + 1/6 * (k1 + 2*k2 + 2*k3 + k4)
     return u # last computed set of 4 values
 
-u1 = solve_RK4(F_deriv, u0, h)
-u1d = solve_RK4(F_deriv, u0d, h)
-"""
-th1 = u1[:,2] 
-th2 = u1[:,3]
-w1 = u1[:,0]
-w2 = u1[:,1]
-
-th1d = u1d[:,2] 
-th2d = u1d[:,3]
-w1d = u1d[:,0]
-w2d = u1d[:,1]
-"""
-
-def jacobian(th1, th2, w1, w2):
+def jacobian(w1, w2, th1, th2):
     jac = np.zeros((4,4))
    
     jac[0][2] = 1 #dth1/dw1
@@ -90,29 +81,26 @@ def jacobian(th1, th2, w1, w2):
                                                                                    
     return jac
 
-
 def lyapunov(u, dx):
-    """ Computing the local largest lyapunov exponent at t_max, starting from a given u0 and delta_x"""
-    t = 20 # = t_max = 20 sec, chosen arbitrarily according to the spin-up
-    M = jacobian(u[2],u[3],u[0],u[1]) # evaluating the jacobian at the 20th timestep
-    dxf = sp.linalg.expm(M*t) @ dx # solving for delta_x
+    """ Computing lambda_max after t_step seconds, starting from a given u and dx"""
+    t = 20 # = t_step = 20 sec, chosen arbitrarily according to the spin-up
+    J = jacobian(u[0],u[1],u[2],u[3]) # evaluating the jacobian at u
+    dxf = sp.linalg.expm(J*t) @ dx # solving for dx after t seconds
     norm = np.linalg.norm(dxf)
-    lyapf = np.log(norm/np.linalg.norm(dx))*1/N # Lyapunov exponent of the 20th timestep
+    lyapf = np.log(norm/np.linalg.norm(dx))*1/t # Lyapunov exponent after t seconds
     return lyapf, dxf
 
 #-------------------------------------------
 
-# Initial conditions
-dx0 = np.array([0, 0, 1, 0])
-dx0 = dx0/(np.linalg.norm(dx0)*10**10) # norm(dx0) = 10**(-10)
-
 th = np.linspace(0,np.pi,30) # Angle array
 
+# Templates for initial conditions (u_0)
 theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
+theta_minustheta = [np.array([0, 0, th[p], -th[p]]) for p in range(30)]
 theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
 zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
 
-def global_lyaps(u_0, dx0, h, solve_RK4, F_deriv, lyapunov):
+def global_lyaps(u_0, dx0, dt, solve_RK4, F_deriv, lyapunov):
     """Computes the global largest lyapunov exponents for different initial conditions"""
 
     lya_th = np.zeros(30) # "Lyapunov for each angle" array
@@ -123,7 +111,7 @@ def global_lyaps(u_0, dx0, h, solve_RK4, F_deriv, lyapunov):
             u0 = u_0[p]
             lya = np.zeros(50)
             for i in range(50):
-                u1 = solve_RK4(F_deriv, u0, h) # updating th1, th2, w1, w2
+                u1 = solve_RK4(F_deriv, u0, dt) # updating th1, th2, w1, w2
                 lya[i], dx = lyapunov(u0, dx0)
                 u0 = u1 # updating initial conditions
                 dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
@@ -131,34 +119,39 @@ def global_lyaps(u_0, dx0, h, solve_RK4, F_deriv, lyapunov):
             lya_th[p] = np.average(lya)
     return lya_th
 
-
 def graph_lyaps(th, lya_th, u_0):
     """ Plots the Lyapunov exponents for different initial conditions"""
 
     if all(np.array_equal(a, b) for a, b in zip(u_0, theta_theta)):
-        title = r"Initial conditions: $\theta_1 = \theta_2 = \theta$"
-        filename = "lyap_theta_theta.png"
+        title = r"Initial conditions: $\theta_{1,0}= \theta_{2,0} = \theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
+        filename = "global_lyap_theta_theta.png"
+    elif all(np.array_equal(a, b) for a, b in zip(u_0, theta_minustheta)):
+        title = r"Initial conditions: $\theta_{1,0} = \theta$, $\theta_{2,0} = -\theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
+        filename = "global_lyap_theta_minustheta.png"
     elif all(np.array_equal(a, b) for a, b in zip(u_0, theta_zero)):
-        title = r"Initial conditions: $\theta_1 = \theta$, $\theta_2 = 0$"
-        filename = "lyap_theta_zero.png"
+        title = r"Initial conditions: $\theta_{1,0} = \theta$, $\theta_{2,0} = 0$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
+        filename = "global_lyap_theta_zero.png"
     elif all(np.array_equal(a, b) for a, b in zip(u_0, zero_theta)):
-        title = r"Initial conditions: $\theta_1 = 0$, $\theta_2 = \theta$"
-        filename = "lyap_zero_theta.png"
+        title = r"Initial conditions: $\theta_{1,0} = 0$, $\theta_{2,0} = \theta$ ; $\omega_{1,0} = \omega_{2,0} = 0$"
+        filename = "global_lyap_zero_theta.png"
     
     plt.figure()
     plt.plot(th, lya_th, label = "Largest lyap exp average")
     plt.suptitle(title)
     plt.ylabel("Lyapunov exponent")
     plt.xlabel(r"$\theta$ (rad)")
+    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = 50*{t_step_latex} = 50*20 \n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
     plt.legend()
     plt.grid()
     plt.savefig(filename)
 
-lyap_theta_theta = global_lyaps(theta_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
-lyap_theta_zero = global_lyaps(theta_zero, dx0, h, solve_RK4, F_deriv, lyapunov)
-lyap_zero_theta = global_lyaps(zero_theta, dx0, h, solve_RK4, F_deriv, lyapunov)
+lyap_theta_theta = global_lyaps(theta_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
+lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, solve_RK4, F_deriv, lyapunov)
+lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, solve_RK4, F_deriv, lyapunov)
+lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, solve_RK4, F_deriv, lyapunov)
 
 graph_lyaps(th, lyap_theta_theta, theta_theta)
+graph_lyaps(th, lyap_theta_minustheta, theta_minustheta)
 graph_lyaps(th, lyap_theta_zero, theta_zero)
 graph_lyaps(th, lyap_zero_theta, zero_theta)
 
