@@ -35,11 +35,7 @@ def energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
     E =  T + V # total energy
     return E
 
-th_step = 314
-print()
-print(f"th_step = {th_step}")
-print()
-
+th_step = 314 # Discritization of the angle
 th = np.linspace(0,np.pi,th_step) # Angle array
 energy_pq_th = np.zeros((th_step,th_step))
 
@@ -53,15 +49,12 @@ with tqdm(total=th_step*th_step) as pbar: # Progression bar
 fig, ax = plt.subplots(figsize=(8, 6))
 cax = ax.imshow(energy_pq_th, cmap='jet', extent=[0, np.pi, 0, np.pi], origin='lower')
 
-# Set axis labels and ticks
 ax.set_xlabel(r'$\theta_1$')
 ax.set_ylabel(r'$\theta_2$')
 
-# Add colorbar
 cbar = fig.colorbar(cax, ax=ax)
 cbar.set_label('Energy')
 
-# Show the plot
 plt.title(r'Initial energy for each ($\theta_1$,$\theta_2$)')
 
 plt.savefig("energy_cmap.png")

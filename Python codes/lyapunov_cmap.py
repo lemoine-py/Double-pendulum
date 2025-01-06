@@ -112,20 +112,11 @@ with tqdm(total=th_step*th_step*global_step) as pbar: # Progression bar
 fig, ax = plt.subplots(figsize=(8, 6))
 cax = ax.imshow(lya_pq_th, cmap='jet', extent=[0, np.pi, 0, np.pi], origin='lower')
 
-# Set axis labels and ticks
 ax.set_xlabel(r'$\theta_1$')
 ax.set_ylabel(r'$\theta_2$')
-
 # Add colorbar
 cbar = fig.colorbar(cax, ax=ax)
 cbar.set_label('Lyapunov exponent')
-
-# Set axis ticks
-#ax.set_xticks(np.linspace(0, np.pi, 6))
-#ax.set_yticks(np.linspace(0, np.pi, 6))
-#ax.set_xticklabels([f'{tick:.2f}' for tick in np.linspace(0, np.pi, 6)])
-#ax.set_yticklabels([f'{tick:.2f}' for tick in np.linspace(0, np.pi, 6)])
-
 # Show the plot
 plt.title(r'$\lambda_{max}$ for each ($\theta_1$,$\theta_2$), starting from $\delta x_0$ = [0,0,1,1]e-10')
 
