@@ -26,11 +26,13 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-dt = 0.01 
+th_step = 30
+global_step = 25
+dt = 0.01
 N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
 
 # Initial dx0
-dx0 = np.array([0, 0, 1, 0])
+dx0 = np.array([0, 0, 1, 1])
 dx0 = dx0/(np.linalg.norm(dx0)*10**10) # so that norm(dx0) = 10**(-10)
 
 def F_deriv(w1, w2, th1, th2):
@@ -83,16 +85,16 @@ def lyapunov(u, dx, t_step):
 
 
 
-th = np.linspace(0,np.pi,30) # Angle array
-lya_pq_th = np.zeros((30,30))
+th = np.linspace(0,np.pi,th_step) # Angle array
+lya_pq_th = np.zeros((th_step,th_step))
 
-with tqdm(total=30*30*50) as pbar: # Progression bar
-    for p in range(30):
-        for q in range(30):
+with tqdm(total=th_step*th_step*global_step) as pbar: # Progression bar
+    for p in range(th_step):
+        for q in range(th_step):
             Jpq = jacobian(0, 0, th[p], th[q])
             u0 = np.array([0, 0, th[p], th[q]])
-            lya_pq = np.zeros(50)
-            for i in range(50):
+            lya_pq = np.zeros(global_step)
+            for i in range(global_step):
                 u1 = solve_RK4(F_deriv, u0, dt, N)
                 lya_pq[i], dx = lyapunov(u0, dx0, t_step)
                 u0 = u1
@@ -120,7 +122,15 @@ cbar.set_label('Lyapunov exponent')
 #ax.set_yticklabels([f'{tick:.2f}' for tick in np.linspace(0, np.pi, 6)])
 
 # Show the plot
-plt.title('Global Lyapunov exponents for each pair of initial angles')
+plt.title(r'$\lambda_{max}$ for each ($\theta_1$,$\theta_2$), starting from $\delta x_0$ = [0,0,1,1]e-10')
 
-plt.savefig("global_lyap_cmap.png")
+plt.savefig("global_lyap_cmap_z.png")
+
+print()
+print(f"t_step = {t_step}")
+print(f"th_step = {th_step}")
+print(f"global_step = {global_step}")
+print(f"dt = {dt}")
+print()
+
 plt.show()

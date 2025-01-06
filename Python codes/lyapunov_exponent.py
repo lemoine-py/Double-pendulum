@@ -32,7 +32,7 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-dt = 0.01 
+dt = 0.01
 N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
 
 # Initial dx0
