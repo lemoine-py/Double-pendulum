@@ -26,9 +26,9 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-th_step = 30
+th_step = 60
 global_step = 25
-dt = 0.01
+dt = 0.025
 N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
 
 # Initial dx0
@@ -83,7 +83,12 @@ def lyapunov(u, dx, t_step):
     lyapf = np.log(norm/np.linalg.norm(dx))*1/t_step # Lyapunov exponent after t seconds
     return lyapf, dxf
 
-
+print()
+print(f"t_step = {t_step}")
+print(f"th_step = {th_step}")
+print(f"global_step = {global_step}")
+print(f"dt = {dt}")
+print()
 
 th = np.linspace(0,np.pi,th_step) # Angle array
 lya_pq_th = np.zeros((th_step,th_step))
@@ -125,12 +130,5 @@ cbar.set_label('Lyapunov exponent')
 plt.title(r'$\lambda_{max}$ for each ($\theta_1$,$\theta_2$), starting from $\delta x_0$ = [0,0,1,1]e-10')
 
 plt.savefig("global_lyap_cmap_z.png")
-
-print()
-print(f"t_step = {t_step}")
-print(f"th_step = {th_step}")
-print(f"global_step = {global_step}")
-print(f"dt = {dt}")
-print()
 
 plt.show()
