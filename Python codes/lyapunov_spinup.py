@@ -75,8 +75,8 @@ def RK4_matrix(A, delta_0, dt, N):
 # Arbitrary initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 1
-th2_0 = 1
+th1_0 = 1.57
+th2_0 = 1.57
 
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 
@@ -152,7 +152,7 @@ plt.plot(t_delta, np.max(eigenvalue.real)*np.ones(N), ":", color = "red", label 
 plt.suptitle(f"SPIN-UP for u0 = [{w1_0}, {w2_0}, {th1_0}, {th2_0}]")
 plt.xlabel("Time (s)")
 plt.ylabel("Lyapunov exponent")
-plt.text(0.8, 0.4, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.8, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
 plt.savefig("lyapunov_spinup_xrad.png")
