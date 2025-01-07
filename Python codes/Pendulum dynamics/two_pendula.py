@@ -6,7 +6,7 @@ Running this code produces 6 files :
 
 1. <angles1_velocities1.png> : four subplots for each angles and angular velocities with respect to time
 2. <angles2_velocities2.png> : same as 1. but for another double pendulum
-3. <four_brownian_motion.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
+3. <four_parametric.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
 4. <four_energy_loss.png> : total energy losses due to the numerical model's inaccuracy
 5. <four_XY_paths.png> : two subplots of 2D-cartesian trajectories for each double pendulum
 6. <four_pendula.gif> : animation of the four pendula's movements (20 seconds)
@@ -167,7 +167,7 @@ plt.ylabel(r"$\theta_2$")
 plt.xlim(-20, 10)
 plt.legend()
 plt.grid()
-plt.savefig("two_brownian_motion.png")
+plt.savefig("two_parametric.png")
 
 ### Positions in cartesian coordinates ### ------------------------------------------------------------------
 def cartesian(tha, thb, la, lb):

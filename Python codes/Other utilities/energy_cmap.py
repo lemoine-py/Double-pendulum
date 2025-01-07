@@ -27,13 +27,13 @@ def initial_energy(m1, m2, l1, l2, g, w1, w2, th1, th2):
     E =  T + V # total energy
     return E
 
-th_step = 314 # Discritization of the angle
-th = np.linspace(0,np.pi,th_step) # Angle array
-energy_pq_th = np.zeros((th_step,th_step))
+theta_N = 314 # Discritization of the angle
+th = np.linspace(0,np.pi,theta_N) # Angle array
+energy_pq_th = np.zeros((theta_N,theta_N))
 
-with tqdm(total=th_step*th_step) as pbar: # Progression bar
-    for p in range(th_step):
-        for q in range(th_step):
+with tqdm(total=theta_N*theta_N) as pbar: # Progression bar
+    for p in range(theta_N):
+        for q in range(theta_N):
             energy_pq_th[p][q] = initial_energy(m1, m2, l1, l2, g, w1_0, w2_0, th[p], th[q])
             pbar.update(1)
 

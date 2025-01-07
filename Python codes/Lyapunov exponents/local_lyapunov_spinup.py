@@ -58,10 +58,10 @@ def jacobian(w1, w2, th1, th2):
     return jac
 
 ### Runge-Kutta 4 for matrices ###
-def RK4_matrix(A, delta_0, dt, N):
+def RK4_matrix(A, dx0, dt, N):
     """ Runge-Kutta 4 scheme for F = A@y """
     y = np.zeros((4, N+1))
-    y[:, 0] = delta_0 # delta's initial conditions
+    y[:, 0] = dx0 # delta's initial conditions
     for i in range(N):
         k1 = dt * (A @ y[:, i])
         k2 = dt * (A @ (y[:, i] + k1/2))
@@ -86,17 +86,19 @@ dt = 0.01
 N = int(np.floor(t_max/dt))+1
 t_delta = np.linspace(0, t_max, N) # time array
 
+theta_N = 30
+
 # Arbitrary initial Delta_X
-delta_0 = [0, 0, 10**(-10), 0]
+dx0 = [0, 0, 10**(-10), 0]
 
 # Calling the jacobian function and fixing initial values
 J = jacobian(w1_0, w2_0, th1_0, th2_0)
 
 #-------------------------------------------
 ### Solving delta_X(t) with RK4
-delta = RK4_matrix(J, delta_0, dt, N)
+delta = RK4_matrix(J, dx0, dt, N)
 
-def lya_exp(t, delta):
+def lyapunov_RK4(t, delta, N):
     lya = np.zeros(N)
     norm = np.zeros(N)
     for i in range (N):
@@ -105,15 +107,15 @@ def lya_exp(t, delta):
         lya[i] = np.log((norm[i])/norm[0])/t[i]
     return lya
 
-lya = lya_exp(t_delta, delta)
+lya_RK4 = lyapunov_RK4(t_delta, delta, N)
 #-------------------------------------------
 ### Solving delta_X(t) with matrix exponentials
 delta_a = np.zeros((N,4))
 
 for i in range(N):
-    delta_a[i] = sp.linalg.expm(J*t_delta[i]) @ delta_0
+    delta_a[i] = sp.linalg.expm(J*t_delta[i]) @ dx0
 
-def lya_a_exp(t_delta, delta_a):
+def lyapunov_expm(t_delta, delta_a, N):
     lya = np.zeros(N)
     norm = np.zeros(N)
     for i in range (N):
@@ -123,7 +125,7 @@ def lya_a_exp(t_delta, delta_a):
         lya[i] = np.log((norm[i])/norm[0])/t_delta[i]
     return lya
 
-lya_a = lya_a_exp(t_delta, delta_a)
+lya_expm = lyapunov_expm(t_delta, delta_a, N)
 
 #-------------------------------------------
 # Verifying with theoretical values of lyapunov_max #
@@ -136,71 +138,23 @@ print("Theoretical lyapunov exponent:")
 print(f"Lambda_max = {np.max(eigenvalue.real)}")
 print()
 print("Experimental lyapunov exponent:")
-print(f"Lambda_max(t_max) = {lya_a[-1]}")
-print(f"Lambda_max(t=20) = {lya_a[2000]}") # t = 20 if dt = 0.01
-print(f"Lyapunov array average from t=20 to t_max: {np.average(lya_a[2000:N])}")
+print(f"Lambda_max(t_max) = {lya_expm[-1]}")
+print(f"Lambda_max(t=20) = {lya_expm[2000]}") # t = 20 if dt = 0.01
+print(f"Lyapunov array average from t=20 to t_max: {np.average(lya_expm[2000:N])}")
 print()
-print(f"N.B. lyapunov array length = N = {len(lya_a)}")
+print(f"N.B. lyapunov array length = N = {len(lya_expm)}")
 print()
 #-------------------------------------------
 # Plotting the single spin-up results
 
 plt.figure()
-plt.plot(t_delta, lya, label = "RK4")
-plt.plot(t_delta, lya_a, "--", label = "linalg.expm")
+plt.plot(t_delta, lya_RK4, label = "RK4")
+plt.plot(t_delta, lya_expm, "--", label = "linalg.expm")
 plt.plot(t_delta, np.max(eigenvalue.real)*np.ones(N), ":", color = "red", label = f"Theoretical {lambda_math} = {np.max(eigenvalue.real)}")
 plt.suptitle(f"SPIN-UP for u0 = [{w1_0}, {w2_0}, {th1_0}, {th2_0}]")
 plt.xlabel("Time (s)")
 plt.ylabel("Lyapunov exponent")
-plt.text(0.8, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_math} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.8, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_math} = {dx0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
 plt.savefig(f"lyap_{t_max}_spinup_{th1_0}rad.png")
-
-
-#-------------------------------------------
-# SPIN-UP for each initial conditions where theta1 = theta2 = theta
-th = np.linspace(0,np.pi,30) # Angle array
-
-theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
-theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
-zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
-
-lyap_spinup1 = np.zeros(30)
-lyap_spinup2 = np.zeros(30)
-lyap_spinup_ave = np.zeros(30)
-lyap_spinup_theo = np.zeros(30)
-
-with tqdm.tqdm(total=30*N) as pbar: # Progression bar
-    for p in range(30):
-        Jp = jacobian(0, 0, th[p], th[p])
-        delta_ap = np.zeros((N,4))
-        for i in range(N):
-            delta_ap[i] = sp.linalg.expm(Jp*t_delta[i]) @ delta_0
-            pbar.update(1)
-        lya_ap = lya_a_exp(t_delta, delta_ap) 
-
-        lyap_spinup_theo[p] = np.max(np.linalg.eig(Jp)[0].real)
-        lyap_spinup1[p] = lya_ap[2000]
-        lyap_spinup2[p] = lya_ap[10000]
-        filtered_lya_ap = np.array(lya_ap)[np.isfinite(lya_ap)] # Filtering the NaN and inf values
-        lyap_spinup_ave[p] = np.average(filtered_lya_ap)
-  
-# Plotting the SPIN-UP for each initial conditions
-plt.figure()
-plt.plot(th, lyap_spinup_theo, color = "red", label = f"Theoretical {lambda_math}")
-plt.plot(th, lyap_spinup1, "--", color = "limegreen", label = f"{lambda_math} at t = 20")
-plt.plot(th, lyap_spinup2, "--", color = "blue", label = f"{lambda_math} at t = 100")
-plt.plot(th, lyap_spinup_ave, color = "orange", label = f"np.average(filtered_{lambda_math}(t))")
-
-
-plt.suptitle(r"SPIN-UP for each initial conditions where $\theta_{1,0} = \theta_{2,0} = \theta$")
-plt.ylabel("Lyapunov exponent")
-plt.xlabel(r"$\theta$ (rad)")
-plt.text(0.2, 0.3, f"dt = {dt}\n {t_max_math} = {t_max} \n {delta_math} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
-plt.legend()
-plt.grid()
-
-plt.savefig("local_lyap_theta_theta.png")
-
-plt.show()

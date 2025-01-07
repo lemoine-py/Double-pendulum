@@ -35,6 +35,9 @@ t_step = 20
 dt = 0.01
 N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
 
+theta_N = 30
+n_step = 50
+
 # Initial dx0
 dx0 = np.array([0, 0, 1, 0])
 dx0 = dx0/(np.linalg.norm(dx0)*10**10) # so that norm(dx0) = 10**(-10)
@@ -97,23 +100,23 @@ theta_minustheta = [np.array([0, 0, th[p], -th[p]]) for p in range(30)]
 theta_zero = [np.array([0, 0, th[p], 0]) for p in range(30)]
 zero_theta = [np.array([0, 0, 0, th[p]]) for p in range(30)]
 
-def global_lyaps(u_0, dx0, dt, last_RK4, F_deriv, lyapunov):
+def global_lyaps(u_0, dx0, dt, last_RK4, F_deriv, lyapunov, n_step, theta_N):
     """Computes the global largest lyapunov exponents for different initial conditions"""
 
     lya_th = np.zeros(30) # "Lyapunov for each angle" array
 
-    steps = 30*50
+    steps = 30*n_step
     with tqdm(total=steps) as pbar: # Progression bar
         for p in range(30):
             u0 = u_0[p]
-            lya = np.zeros(50)
-            for i in range(50):
+            lya_steps = np.zeros(n_step)
+            for i in range(n_step):
                 u1 = last_RK4(F_deriv, u0, dt, N) # updating th1, th2, w1, w2
-                lya[i], dx = lyapunov(u0, dx0, t_step) # computing the lyapunov exponent
+                lya_steps[i], dx = lyapunov(u0, dx0, t_step) # computing the lyapunov exponent
                 u0 = u1 # updating initial conditions
                 dx0 = dx/(np.linalg.norm(dx)*10**10) # Renormalising so that norm(dx0) = 10**(-10)
                 pbar.update(1)  # Updates the progression bar
-            lya_th[p] = np.average(lya) 
+            lya_th[p] = np.average(lya_steps) 
             # filtered_lya_th = np.array(lya_th)[np.isfinite(lya_th)] # Filtering the NaN and inf values
             # lya_th_ave[p] = np.average(filtered_lya_th)
     return lya_th
@@ -144,10 +147,10 @@ def graph_lyaps(th, lya_th, u_0):
     plt.grid()
     plt.savefig(filename)
 
-lyap_theta_theta = global_lyaps(theta_theta, dx0, dt, last_RK4, F_deriv, lyapunov)
-#lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, last_RK4, F_deriv, lyapunov)
-#lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, last_RK4, F_deriv, lyapunov)
-#lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, last_RK4, F_deriv, lyapunov)
+lyap_theta_theta = global_lyaps(theta_theta, dx0, dt, last_RK4, F_deriv, lyapunov, n_step, theta_N)
+#lyap_theta_minustheta = global_lyaps(theta_minustheta, dx0, dt, last_RK4, F_deriv, lyapunov, n_step, theta_N)
+#lyap_theta_zero = global_lyaps(theta_zero, dx0, dt, last_RK4, F_deriv, lyapunov, n_step, theta_N)
+#lyap_zero_theta = global_lyaps(zero_theta, dx0, dt, last_RK4, F_deriv, lyapunov, n_step, theta_N)
 
 graph_lyaps(th, lyap_theta_theta, theta_theta)
 #graph_lyaps(th, lyap_theta_minustheta, theta_minustheta)

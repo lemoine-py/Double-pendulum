@@ -26,10 +26,10 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-theta_N = 60
+theta_N = 120
 n_step = 25
-dt = 0.025
-N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
+dt = 0.0025
+N = int(np.floor(t_step/dt))+1
 
 # Initial dx0
 dx0 = np.array([0, 0, 1, 1])

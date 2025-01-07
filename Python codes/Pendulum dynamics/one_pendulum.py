@@ -3,7 +3,7 @@ This code simulates the dynamics of one double pendulum system
 and produces 5 files:
 
 1. <angles_velocities.png> : four subplots for each angles and angular velocities with respect to time
-2. <one_brownian_motion.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
+2. <one_parametric.png> : theta_1 vs theta_2 plot, illustrates the brownian motion of the system
 3. <one_energy_loss.png> : total energy loss due to the numerical model's inaccuracy
 4. <one_XY_paths.png> : 2D-cartesian trajectories of the pendulums
 5. <one_pendulum.gif> : animation of the four pendula's movements (20 seconds)
@@ -110,7 +110,7 @@ ax.set_xlabel(r"$\theta_1$")
 ax.set_ylabel(r"$\theta_2$")
 ax.legend()
 ax.grid()
-fig.savefig("one_brownian_motion.png")
+fig.savefig("one_parametric.png")
 
 
 ### Energy calculations ### ---------------------------------------------------------------------------

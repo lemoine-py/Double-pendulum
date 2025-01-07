@@ -8,6 +8,8 @@ The functions are:
 - RK4_matrix : computes the values of a matrix differential equation using the Runge-Kutta 4 method
 - jacobian : computes the Jacobian of the double pendulum's system of differential equations
 - lyapunov : computes the largest Lyapunov exponent of the double pendulum's system of differential equations
+- lyapunov_RK4 : computes the Lyapunov exponents by first solving for delta_x using the Runge-Kutta 4 method
+- lyapunov_expm : computes the Lyapunov exponents by first solving for delta_x using the matrix exponential method
 """
 
 # Libraries
@@ -84,3 +86,22 @@ def lyapunov(u, dx, t_step):
     norm = np.linalg.norm(dxf)
     lyapf = np.log(norm/np.linalg.norm(dx))*1/t_step # Lyapunov exponent after t seconds
     return lyapf, dxf
+
+def lyapunov_RK4(t, delta, N):
+    lya = np.zeros(N)
+    norm = np.zeros(N)
+    for i in range (N):
+        norm[i] = np.linalg.norm(delta[:,i])
+    for i in range(N):
+        lya[i] = np.log((norm[i])/norm[0])/t[i]
+    return lya
+
+def lyapunov_expm(t_delta, delta_a, N):
+    lya = np.zeros(N)
+    norm = np.zeros(N)
+    for i in range (N):
+        norm[i] = np.linalg.norm(delta_a[i])
+    
+    for i in range(N):
+        lya[i] = np.log((norm[i])/norm[0])/t_delta[i]
+    return lya
