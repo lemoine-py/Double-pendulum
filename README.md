@@ -11,21 +11,44 @@ Finally we analyze the chaoticity of the system, by computing the experimental v
 
 ## Project structure
 
-The present repository contains 3 main folders that are:
+The present repository contains 3 main folders:
 
-1. `ipynb notebooks`: contains jupyter notebooks
-2. `Plots and animations`: contains various plots produced by the codes
-   1. High energy
-   2. Low energy
-   3. Critical
-   4. Critical
-   5. Lyapunov
-   6. Others
-3. `Python codes`: contains all the .py files
-   1. Pendulum dynamics
-   2. Lyapunov exponents
-   3. Other utilities
+### __ipynb notebooks__ (jupyter)
 
+1. `Pendulum_dynamics.ipynb`: notebook equivalent for the codes in the `Pendulum dynamics` folder
+2. `Lyapunov_exponents.ipynb`: notebook equivalent for the codes in the `Lyapunov exponents` folder
+
+### __Plots and animations__
+
+This folder contains various graphical visualisations produced by the codes.
+
+1. `Pendulum dynamics - vizualisation`: plots mainly produced with four_pendula.py
+   1. `Critical angle - 20sec`: starting near critical angle for a time of 20sec
+   2. `Critical angle - 100sec`: starting near critical angle for a time of 100sec
+   3. `High energies`: starting with high intial energies
+   4. `Low energies`: starting with low initial energies
+2. `Colormaps`: colormaps for initial energy, global and local Lyapunov exponents
+3. `Global Lyapunov`: plots produced with global_lyapunov.py
+4. `Local Lyapunov spin-ups`: plots produced with local_lyapunov_spinup.py
+
+### __Python codes__
+
+1. *Pendulum dynamics*: numerical simulation of the double pendulum
+   1. `one_pendulum.py`: simulation of a single pendulum
+   2. `two_pendula.py`: simulation of two pendula
+   3. `four_pendula.py`: simulation of four pendula
+2. *Lyapunov exponents*: computation of the Lyapunov exponents
+   1. `global_lyapunov.py`: computation of the global Lyapunov exponents
+   2. `global_lyapunov_cmap.py`: producing general results for the local Lyapunov exponents
+   3. `local_lyapunov_spinup.py`: producing the spin-up phase for the local Lyapunov exponents
+   4. `local_lyapunov_cmap.py`: producing the colormap of the local Lyapunov exponents
+3. *Other utilities*:
+   1. `functions.py`: contains the functions used in the other files
+   2. `energy_cmap.py`: produces the colormap of the initial energy of the system
+   3. `explicit_derivative.py`: computes the derivative of the pendulum equations
+   4. `Initilaize_planets.py`: prompts the parameters of the pendulum
+
+> The requirements for the project are listed in the `requirements.txt` file, in the `Documents` folder.
 
 ## Description of the model
 

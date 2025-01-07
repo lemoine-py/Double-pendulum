@@ -26,8 +26,8 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-th_step = 60
-global_step = 25
+theta_N = 60
+n_step = 25
 dt = 0.025
 N = int(np.floor(t_step/dt))+1 # about 2000 timesteps
 
@@ -47,7 +47,7 @@ def F_deriv(w1, w2, th1, th2):
     
     return np.array([w1_dot, w2_dot, w1, w2])
     
-def solve_RK4(f, u0, dt, N):
+def last_RK4(f, u0, dt, N):
     """ Returns : u (4x1 array of last computed values)"""
     u = np.zeros(4)
     u = u0
@@ -85,22 +85,22 @@ def lyapunov(u, dx, t_step):
 
 print()
 print(f"t_step = {t_step}")
-print(f"th_step = {th_step}")
-print(f"global_step = {global_step}")
+print(f"theta_N = {theta_N}")
+print(f"n_step = {n_step}")
 print(f"dt = {dt}")
 print()
 
-th = np.linspace(0,np.pi,th_step) # Angle array
-lya_pq_th = np.zeros((th_step,th_step))
+th = np.linspace(0,np.pi,theta_N) # Angle array
+lya_pq_th = np.zeros((theta_N,theta_N))
 
-with tqdm(total=th_step*th_step*global_step) as pbar: # Progression bar
-    for p in range(th_step):
-        for q in range(th_step):
+with tqdm(total=theta_N*theta_N*n_step) as pbar: # Progression bar
+    for p in range(theta_N):
+        for q in range(theta_N):
             Jpq = jacobian(0, 0, th[p], th[q])
             u0 = np.array([0, 0, th[p], th[q]])
-            lya_pq = np.zeros(global_step)
-            for i in range(global_step):
-                u1 = solve_RK4(F_deriv, u0, dt, N)
+            lya_pq = np.zeros(n_step)
+            for i in range(n_step):
+                u1 = last_RK4(F_deriv, u0, dt, N)
                 lya_pq[i], dx = lyapunov(u0, dx0, t_step)
                 u0 = u1
                 dx0 = dx/(np.linalg.norm(dx)*10**10)
