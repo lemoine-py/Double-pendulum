@@ -9,6 +9,24 @@ We first solve numerically its lagrangian equations, translated into a system of
 We then represent visually the system, by a couple of different types of graphs.
 Finally we analyze the chaoticity of the system, by computing the experimental values of the lyapunov exponents and plotting them into intuitive graphs.
 
+## Project structure
+
+The present repository contains 3 main folders that are:
+
+1. `ipynb notebooks`: contains jupyter notebooks
+2. `Plots and animations`: contains various plots produced by the codes
+   1. High energy
+   2. Low energy
+   3. Critical
+   4. Critical
+   5. Lyapunov
+   6. Others
+3. `Python codes`: contains all the .py files
+   1. Pendulum dynamics
+   2. Lyapunov exponents
+   3. Other utilities
+
+
 ## Description of the model
 
 In a nutshell, the model of the double pendulum consists in a pendulum hanging at the bottom of another pendulum.

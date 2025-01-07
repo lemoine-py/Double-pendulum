@@ -10,12 +10,12 @@ import scipy as sp # For the matrix exponential
 import matplotlib.pyplot as plt
 from tqdm import tqdm # Progression bar
 
-# Latex labels
-lambda_latex = r"$\lambda_{max}$"
-lambda_n_latex = r"$\lambda_{max,n}$"
-delta_latex = r"$\delta x_0$"
-t_max_latex = r"$t_{max}$"
-t_step_latex = r"$t_{step}$"
+# math labels
+lambda_math = r"$\lambda_{max}$"
+lambda_n_math = r"$\lambda_{max,n}$"
+delta_math = r"$\delta x_0$"
+t_max_math = r"$t_{max}$"
+t_step_math = r"$t_{step}$"
 
 # Parameters
 m1 = 1

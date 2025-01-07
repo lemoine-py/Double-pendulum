@@ -16,12 +16,12 @@ import scipy as sp # For the matrix exponential
 import matplotlib.pyplot as plt
 from tqdm import tqdm # Progression bar
 
-# Latex labels
-lambda_latex = r"$\lambda_{max}$"
-lambda_n_latex = r"$\lambda_{max,n}$"
-delta_latex = r"$\delta x_0$"
-t_max_latex = r"$t_{max}$"
-t_step_latex = r"$t_{step}$"
+# math labels
+lambda_math = r"$\lambda_{max}$"
+lambda_n_math = r"$\lambda_{max,n}$"
+delta_math = r"$\delta x_0$"
+t_max_math = r"$t_{max}$"
+t_step_math = r"$t_{step}$"
 
 # Parameters
 m1 = 1
@@ -135,11 +135,11 @@ def graph_lyaps(th, lya_th, u_0):
         filename = "global_lyap_zero_theta.png"
     
     plt.figure()
-    plt.plot(th, lya_th, label = f"{lambda_n_latex} average")
+    plt.plot(th, lya_th, label = f"{lambda_n_math} average")
     plt.suptitle(title)
     plt.ylabel("Lyapunov exponent")
     plt.xlabel(r"$\theta$ (rad)")
-    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_latex} = n*{t_step_latex} = 50*20\n {delta_latex} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+    plt.text(0.2, 0.7, f"dt = {dt} \n {t_max_math} = n*{t_step_math} = 50*20\n {delta_math} = [0,0,1e-10,0]", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
     plt.legend()
     plt.grid()
     plt.savefig(filename)

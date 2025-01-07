@@ -16,10 +16,10 @@ import scipy as sp
 import matplotlib.pyplot as plt
 import tqdm # Progression bar
 
-# Latex labels
-lambda_latex = r"$\lambda_{max}$"
-delta_latex = r"$\delta x_0$"
-t_max_latex = r"$t_{max}$"
+# math labels
+lambda_math = r"$\lambda_{max}$"
+delta_math = r"$\delta x_0$"
+t_max_math = r"$t_{max}$"
 
 # Parameters
 l1 = 1
@@ -148,11 +148,11 @@ print()
 plt.figure()
 plt.plot(t_delta, lya, label = "RK4")
 plt.plot(t_delta, lya_a, "--", label = "linalg.expm")
-plt.plot(t_delta, np.max(eigenvalue.real)*np.ones(N), ":", color = "red", label = f"Theoretical {lambda_latex} = {np.max(eigenvalue.real)}")
+plt.plot(t_delta, np.max(eigenvalue.real)*np.ones(N), ":", color = "red", label = f"Theoretical {lambda_math} = {np.max(eigenvalue.real)}")
 plt.suptitle(f"SPIN-UP for u0 = [{w1_0}, {w2_0}, {th1_0}, {th2_0}]")
 plt.xlabel("Time (s)")
 plt.ylabel("Lyapunov exponent")
-plt.text(0.8, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.8, 0.3, f"dt = {dt} \n t_max = {t_max} \n {delta_math} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.grid()
 plt.legend()
 plt.savefig(f"lyap_{t_max}_spinup_{th1_0}rad.png")
@@ -188,16 +188,16 @@ with tqdm.tqdm(total=30*N) as pbar: # Progression bar
   
 # Plotting the SPIN-UP for each initial conditions
 plt.figure()
-plt.plot(th, lyap_spinup_theo, color = "red", label = f"Theoretical {lambda_latex}")
-plt.plot(th, lyap_spinup1, "--", color = "limegreen", label = f"{lambda_latex} at t = 20")
-plt.plot(th, lyap_spinup2, "--", color = "blue", label = f"{lambda_latex} at t = 100")
-plt.plot(th, lyap_spinup_ave, color = "orange", label = f"np.average(filtered_{lambda_latex}(t))")
+plt.plot(th, lyap_spinup_theo, color = "red", label = f"Theoretical {lambda_math}")
+plt.plot(th, lyap_spinup1, "--", color = "limegreen", label = f"{lambda_math} at t = 20")
+plt.plot(th, lyap_spinup2, "--", color = "blue", label = f"{lambda_math} at t = 100")
+plt.plot(th, lyap_spinup_ave, color = "orange", label = f"np.average(filtered_{lambda_math}(t))")
 
 
 plt.suptitle(r"SPIN-UP for each initial conditions where $\theta_{1,0} = \theta_{2,0} = \theta$")
 plt.ylabel("Lyapunov exponent")
 plt.xlabel(r"$\theta$ (rad)")
-plt.text(0.2, 0.3, f"dt = {dt}\n {t_max_latex} = {t_max} \n {delta_latex} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
+plt.text(0.2, 0.3, f"dt = {dt}\n {t_max_math} = {t_max} \n {delta_math} = {delta_0}", bbox = dict(facecolor = "white", alpha = 1), horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
 plt.legend()
 plt.grid()
 
