@@ -1,6 +1,19 @@
 """
-This script calculates the local Lyapunov exponents for each pair of initial angles
-(θ1, θ2) in the range [0, π] x [0, π] and plots the results as a colormap.
+1. Colormap
+Calculates the local Lyapunov exponents for each pair of initial angles
+(theta_1, theta_2) in the range [0, pi] x [0, pi] and plots the results as a colormap.
+
+By default it is set to only use the theoretical way of calculating the Lyapunov exponents,
+which is by calculating the maximum eigenvalue of the Jacobian matrix at each point.
+If you want to calculate the Lyapunov exponents using the matrix exponential, you can
+uncomment the lines in the for loop and comment the theoretical way.
+
+2. Simple 2D plot
+Calculates the local Lyapunov exponents for each initial condition where theta_1 = theta_2 = theta.
+It then plots 
+a. the theoretical maximum Lyapunov exponent,
+b. the "matrix exponentials" Lyapunov exponent at t = 20 and t = 100,
+and their average over time.
 
 """
 
@@ -74,8 +87,12 @@ with tqdm(total=theta_N*theta_N*N) as pbar: # Progression bar
     for p in range(theta_N):
         for q in range(theta_N):
             Jpq = jacobian(0, 0, th[p], th[q])
+
+            ## Theoretical way:
             local_lyap_pq[p][q] = np.max(np.linalg.eig(Jpq)[0].real)
             pbar.update(N)
+
+            ## Matrix exponential way:
             # delta_ap = np.zeros((N,4))
             # for i in range(N):
             #     delta_ap[i] = sp.linalg.expm(Jpq*t_delta[i]) @ dx0

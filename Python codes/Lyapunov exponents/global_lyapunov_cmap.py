@@ -1,6 +1,6 @@
 """
 This script calculates the global Lyapunov exponents for each pair of initial angles
-(θ1, θ2) in the range [0, π] x [0, π] and plots the results as a colormap.
+(theta_1, theta_2) in the range [0, pi] x [0, pi] and plots the results as a colormap.
 
 """
 
