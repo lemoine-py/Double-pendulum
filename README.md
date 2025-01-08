@@ -33,6 +33,8 @@ This folder contains various graphical visualisations produced by the codes.
 3. `Global Lyapunov`: plots produced with global_lyapunov.py
 4. `Local Lyapunov spin-ups`: plots produced with local_lyapunov_spinup.py
 
+> Caution: most of the colormaps have mistakenly produced with $\theta_1$ as the label of the x-axis, and $\theta_2$ as the label of the y-axis. This is a mistake, and the labels should be swapped.
+
 ### __Python codes__
 
 These files contain the main codes used to produce the results (mainly represented in graphs) of the project.
