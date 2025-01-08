@@ -26,9 +26,9 @@ g = 9.81
 
 # Time parameters
 t_step = 20
-theta_N = 120
-n_step = 25
-dt = 0.0025
+theta_N = 60
+n_step = 20
+dt = 0.01
 N = int(np.floor(t_step/dt))+1
 
 # Initial dx0

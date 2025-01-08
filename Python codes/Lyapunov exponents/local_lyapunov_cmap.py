@@ -38,7 +38,7 @@ l2 = 1
 g = 9.81
 
 # Time parameters
-theta_N = 30
+theta_N = 314 
 dt = 0.01
 t_max = 100
 N = int(np.floor(t_max/dt))+1
@@ -104,7 +104,7 @@ with tqdm(total=2*theta_N*2*theta_N*N) as pbar: # Progression bar
 
 # Plot the array as a colormap
 fig, ax = plt.subplots(figsize=(8, 6))
-cax = ax.imshow(local_lyap_pq, cmap='jet', extent=[0, np.pi, 0, np.pi], origin='lower')
+cax = ax.imshow(local_lyap_pq, cmap='jet', extent=[-np.pi, np.pi, -np.pi, np.pi], origin='lower')
 
 ax.set_xlabel(r'$\theta_2$')
 ax.set_ylabel(r'$\theta_1$')
