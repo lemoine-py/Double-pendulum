@@ -80,12 +80,12 @@ print(f"dt = {dt}")
 print(f"theta_N = {theta_N}")
 print()
 
-th = np.linspace(0,np.pi,theta_N) # Angle array
-local_lyap_pq = np.zeros((theta_N,theta_N))
+th = np.linspace(-np.pi,np.pi,2*theta_N) # Angle array
+local_lyap_pq = np.zeros((2*theta_N,2*theta_N))
 
-with tqdm(total=theta_N*theta_N*N) as pbar: # Progression bar
-    for p in range(theta_N):
-        for q in range(theta_N):
+with tqdm(total=2*theta_N*2*theta_N*N) as pbar: # Progression bar
+    for p in range(2*theta_N):
+        for q in range(2*theta_N):
             Jpq = jacobian(0, 0, th[p], th[q])
 
             ## Theoretical way:

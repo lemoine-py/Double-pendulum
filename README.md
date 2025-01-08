@@ -25,11 +25,10 @@ These notebooks were made mainly for accessibility and readability purposes. The
 This folder contains various graphical visualisations produced by the codes.
 
 1. `Pendulum dynamics - vizualisation`: plots mainly produced with four_pendula.py
-   1. `Big critical - 100sec`: starting roughly near critical angle for a time of 100sec
-   2. `Critical angle - 20sec`: starting very close to critical angle for a time of 20sec
-   3. `Critical angle - 100sec`: starting very close critical angle for a time of 100sec
-   4. `High energies`: starting with high intial energies
-   5. `Low energies`: starting with low initial energies
+   1. `Big critical`: starting roughly near critical angle for a time of 100sec
+   2. `Critical angle`: starting very close critical angle for a time of 100sec
+   3. `High energies`: starting with high intial energies
+   4. `Low energies`: starting with low initial energies
 2. `Colormaps`: colormaps for initial energy, global and local Lyapunov exponents
 3. `Global Lyapunov`: plots produced with global_lyapunov.py
 4. `Local Lyapunov spin-ups`: plots produced with local_lyapunov_spinup.py
