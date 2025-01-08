@@ -75,8 +75,8 @@ def RK4_matrix(A, dx0, dt, N):
 # Arbitrary initial conditions
 w1_0 = 0
 w2_0 = 0
-th1_0 = 1.8
-th2_0 = 1.8
+th1_0 = 3.14
+th2_0 = 3.14
 
 u0 = np.array([w1_0, w2_0, th1_0, th2_0])
 

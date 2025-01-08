@@ -2,6 +2,8 @@
 This script calculates the global Lyapunov exponents for each pair of initial angles
 (theta_1, theta_2) in the range [0, pi] x [0, pi] and plots the results as a colormap.
 
+Depending on parameters like t_step, theta_N, n_step and dt, the computation can take a long time.
+tqdm is used to have an estimation of the remaining time, and display a progression bar.
 """
 
 # Libraries
@@ -27,12 +29,12 @@ g = 9.81
 # Time parameters
 t_step = 20
 theta_N = 60
-n_step = 20
-dt = 0.01
+n_step = 25
+dt = 0.0025
 N = int(np.floor(t_step/dt))+1
 
 # Initial dx0
-dx0 = np.array([0, 0, 1, 1])
+dx0 = np.array([0, 0, 1, 0])
 dx0 = dx0/(np.linalg.norm(dx0)*10**10) # so that norm(dx0) = 10**(-10)
 
 def F_deriv(w1, w2, th1, th2):
@@ -118,7 +120,7 @@ ax.set_ylabel(r'$\theta_1$')
 cbar = fig.colorbar(cax, ax=ax)
 cbar.set_label('Lyapunov exponent')
 # Show the plot
-plt.title(r'$\lambda_{max}$ for each ($\theta_1$,$\theta_2$), starting from $\delta x_0$ = [0,0,1,1]e-10')
+plt.title(r'$\lambda_{max}$ for each ($\theta_1$,$\theta_2$), starting from $\delta x_0$ = [0,0,1,0]e-10')
 
 plt.savefig("global_lyap_cmap_z.png")
 

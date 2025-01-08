@@ -92,7 +92,7 @@ def lyapunov(u, dx, t_step):
 
 #-------------------------------------------
 
-th = np.linspace(0,np.pi,30) # Angle array
+th = np.linspace(0,np.pi,theta_N) # Angle array
 
 # Templates for initial conditions (u_0)
 theta_theta = [np.array([0, 0, th[p], th[p]])  for p in range(30)]
