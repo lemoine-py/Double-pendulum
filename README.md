@@ -15,23 +15,28 @@ The present repository contains 3 main folders:
 
 ### __ipynb notebooks__ (jupyter)
 
-1. `Pendulum_dynamics.ipynb`: notebook equivalent for the codes in the `Pendulum dynamics` folder
-2. `Lyapunov_exponents.ipynb`: notebook equivalent for the codes in the `Lyapunov exponents` folder
+These notebooks were made mainly for accessibility and readability purposes. They contain roughly the same codes as the python files, but are more user-friendly.
+
+1. `Pendulum_dynamics.ipynb`: simulation of a single double-pendulum system and graphical visualizations
+2. `Lyapunov_exponents.ipynb`: computation of the Lyapunov exponents and graphs.
 
 ### __Plots and animations__
 
 This folder contains various graphical visualisations produced by the codes.
 
 1. `Pendulum dynamics - vizualisation`: plots mainly produced with four_pendula.py
-   1. `Critical angle - 20sec`: starting near critical angle for a time of 20sec
-   2. `Critical angle - 100sec`: starting near critical angle for a time of 100sec
-   3. `High energies`: starting with high intial energies
-   4. `Low energies`: starting with low initial energies
+   1. `Big critical - 100sec`: starting roughly near critical angle for a time of 100sec
+   2. `Critical angle - 20sec`: starting very close to critical angle for a time of 20sec
+   3. `Critical angle - 100sec`: starting very close critical angle for a time of 100sec
+   4. `High energies`: starting with high intial energies
+   5. `Low energies`: starting with low initial energies
 2. `Colormaps`: colormaps for initial energy, global and local Lyapunov exponents
 3. `Global Lyapunov`: plots produced with global_lyapunov.py
 4. `Local Lyapunov spin-ups`: plots produced with local_lyapunov_spinup.py
 
 ### __Python codes__
+
+These files contain the main codes used to produce the results (mainly represented in graphs) of the project.
 
 1. *Pendulum dynamics*: numerical simulation of the double pendulum
    1. `one_pendulum.py`: simulation of a single pendulum
@@ -43,7 +48,7 @@ This folder contains various graphical visualisations produced by the codes.
    3. `local_lyapunov_spinup.py`: producing the spin-up phase for the local Lyapunov exponents
    4. `local_lyapunov_cmap.py`: producing the colormap of the local Lyapunov exponents
 3. *Other utilities*:
-   1. `functions.py`: contains the functions used in the other files
+   1. `functions.py`: contains the main functions used in the other files (but not actually used as a module)
    2. `energy_cmap.py`: produces the colormap of the initial energy of the system
    3. `explicit_derivative.py`: computes the derivative of the pendulum equations
    4. `Initilaize_planets.py`: prompts the parameters of the pendulum

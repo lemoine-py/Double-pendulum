@@ -112,8 +112,8 @@ with tqdm(total=theta_N*theta_N*n_step) as pbar: # Progression bar
 fig, ax = plt.subplots(figsize=(8, 6))
 cax = ax.imshow(lya_pq_th, cmap='jet', extent=[0, np.pi, 0, np.pi], origin='lower')
 
-ax.set_xlabel(r'$\theta_1$')
-ax.set_ylabel(r'$\theta_2$')
+ax.set_xlabel(r'$\theta_2$')
+ax.set_ylabel(r'$\theta_1$')
 # Add colorbar
 cbar = fig.colorbar(cax, ax=ax)
 cbar.set_label('Lyapunov exponent')

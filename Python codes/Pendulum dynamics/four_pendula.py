@@ -26,7 +26,7 @@ m2 = 1
 g = 9.81
 
 # Time parameters and discretization
-t_max = 20
+t_max = 100
 dt = 0.02 # Not smaller than that for the gif
 N = int(np.floor(t_max/dt))+1
 t = np.linspace(0, t_max, N)
@@ -34,18 +34,19 @@ t = np.linspace(0, t_max, N)
 ### Initial conditions
 # Initial angles templates
 critical = 1.38 # just below critical angle by about 0.002
-high = np.pi + 0.1 # high energy
+big_critical = 1.3 #1.4 + 0.1 was the former value
+high = 2.8 # high energy
 low = 0.1 # low energy
-# Angle offset
+# Angle offset aka delta
 big = 0.1
 medium = 0.01
 small = 0.001
 # Choosing between templates
-angle = critical #change at will
-delta = small #change at will
+angle = low #change at will
+delta = big #change at will
 thetas = [angle + i*delta for i in range(4)]
 
-#1.4 + 0.1 3 times was the previous value
+
 
 # Pendulum A
 w1_0 = 0
@@ -152,7 +153,7 @@ ax[1, 1].set_xlabel("Time (s)")
 ax[1, 1].set_title(r"$\theta_{A2}$")
 ax[1, 1].grid()
 
-fig.suptitle(f"t_max = {t_max} s, theta_0 = {angle} rad, delta = {delta} rad")
+fig.suptitle(r"Angles and angular velocities, $\theta_0$  = %.3f rad" % angle)
 fig.tight_layout()
 fig.savefig("angles1_velocities1.png")
 
@@ -180,7 +181,7 @@ axx[1, 1].set_xlabel("Time (s)")
 axx[1, 1].set_title(r"$\theta_{D2}$")
 axx[1, 1].grid()
 
-figg.suptitle(f"t_max = {t_max} s, theta_0 = {angle} rad, delta = {delta} rad")
+figg.suptitle(r"Angles and angular velocities, $\theta_0$  = %.3f rad" % (angle+3*delta))
 figg.tight_layout()
 figg.savefig("angles2_velocities2.png")
 
@@ -204,10 +205,10 @@ T4, V4, E4 = energy(m1, m2, l1, l2, g, w1111, w2222, th1111, th2222)
 
 # Plotting the difference between the initial total energy and the computed total energy along time
 plt.figure()
-plt.plot(t, E4[0]-E4, label = "Pendulum D", color = "gray")
-plt.plot(t, E3[0]-E3, label = "Pendulum C", color = "gold")
-plt.plot(t, E2[0]-E2, label = "Pendulum B", color = "cyan")
 plt.plot(t, E1[0]-E1, label = "Pendulum A", color = "magenta")
+plt.plot(t, E2[0]-E2, label = "Pendulum B", color = "cyan")
+plt.plot(t, E3[0]-E3, label = "Pendulum C", color = "gold")
+plt.plot(t, E4[0]-E4, label = "Pendulum D", color = "gray")
 
 plt.suptitle("Total energy losses due to RK4 inacurracy")
 plt.xlabel("Time [s]")
